@@ -98,8 +98,8 @@ Force stdio even when `$PORT` is set with `MCP_TRANSPORT=stdio`.
 
 ### Deployment (Railway)
 
-Deployed at `https://ainative-prd-mcp-production.up.railway.app/mcp`. Railway sets
-`$PORT`, so the HTTP transport activates automatically. The server reads
+Deployed at `https://mcp.8genc.com/mcp` (custom domain; also `https://ainative-prd-mcp-production.up.railway.app/mcp`).
+Railway sets `$PORT`, so the HTTP transport activates automatically. The server reads
 `AINATIVE_API_KEY` / `AINATIVE_API_URL` as aliases for `ZERODB_API_KEY` /
 `ZERODB_API_URL`, so the deployed instance uses the real account instead of
 auto-provisioning a throwaway database.
@@ -111,7 +111,7 @@ MCP client config for the hosted server:
   "mcpServers": {
     "prd-generator": {
       "type": "http",
-      "url": "https://ainative-prd-mcp-production.up.railway.app/mcp"
+      "url": "https://mcp.8genc.com/mcp"
     }
   }
 }

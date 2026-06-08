@@ -177,14 +177,15 @@ The server speaks MCP over two transports:
 - **Streamable HTTP** — auto-selected when `$PORT` is set (Railway), or forced with
   `MCP_TRANSPORT=http`. Serves `POST /mcp` plus a `GET /` health check.
 
-Hosted at `https://ainative-prd-mcp-production.up.railway.app/mcp`:
+Hosted at `https://mcp.8genc.com/mcp` (also reachable at the Railway domain
+`https://ainative-prd-mcp-production.up.railway.app/mcp`):
 
 ```json
 {
   "mcpServers": {
     "prd-generator": {
       "type": "http",
-      "url": "https://ainative-prd-mcp-production.up.railway.app/mcp"
+      "url": "https://mcp.8genc.com/mcp"
     }
   }
 }
