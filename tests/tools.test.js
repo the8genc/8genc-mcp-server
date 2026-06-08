@@ -145,21 +145,56 @@ describe('Tool Definitions', () => {
     assert.equal(PLATFORM_TOOLS.length, 3);
   });
 
-  it('all 18 tools have unique names', async () => {
-    const { GENERATION_TOOLS } = await import('../src/tools/generation-tools.js');
-    const { TEMPLATE_TOOLS } = await import('../src/tools/template-tools.js');
-    const { VALIDATION_TOOLS } = await import('../src/tools/validation-tools.js');
-    const { MEMORY_TOOLS } = await import('../src/tools/memory-tools.js');
-    const { PLATFORM_TOOLS } = await import('../src/tools/platform-tools.js');
+  it('skill tools have correct schemas', async () => {
+    const { SKILL_TOOLS } = await import('../src/tools/skill-tools.js');
+    assert.equal(SKILL_TOOLS.length, 5);
 
-    const allTools = [
-      ...GENERATION_TOOLS, ...TEMPLATE_TOOLS, ...VALIDATION_TOOLS,
-      ...MEMORY_TOOLS, ...PLATFORM_TOOLS
-    ];
-    assert.equal(allTools.length, 18);
+    const get = SKILL_TOOLS.find(t => t.name === 'skill_get');
+    assert.ok(get);
+    assert.ok(get.inputSchema.required.includes('skill'));
 
-    const names = allTools.map(t => t.name);
-    assert.equal(new Set(names).size, 18, 'Duplicate tool names found');
+    const names = SKILL_TOOLS.map(t => t.name);
+    for (const expected of ['skill_list', 'skill_get', 'skill_get_reference', 'skill_search', 'skill_sync']) {
+      assert.ok(names.includes(expected), `Missing skill tool: ${expected}`);
+    }
+  });
+
+  it('all 23 tools have unique names', async () => {
+    const { ALL_TOOLS } = await import('../src/server.js');
+    assert.equal(ALL_TOOLS.length, 23);
+
+    const names = ALL_TOOLS.map(t => t.name);
+    assert.equal(new Set(names).size, 23, 'Duplicate tool names found');
+  });
+});
+
+describe('Skills Frontmatter Parser', () => {
+  it('parses name and folded description', async () => {
+    const { parseFrontmatter, stripFrontmatter } = await import('../src/skills/skills-client.js');
+    const md = [
+      '---',
+      'name: my-skill',
+      'description: >',
+      '  First line of the description',
+      '  continues on the second line.',
+      '---',
+      '',
+      '# Body heading',
+      'Body text.'
+    ].join('\n');
+
+    const fm = parseFrontmatter(md);
+    assert.equal(fm.name, 'my-skill');
+    assert.equal(fm.description, 'First line of the description continues on the second line.');
+
+    const body = stripFrontmatter(md);
+    assert.ok(body.startsWith('# Body heading'));
+    assert.ok(!body.includes('name: my-skill'));
+  });
+
+  it('returns empty object when no frontmatter', async () => {
+    const { parseFrontmatter } = await import('../src/skills/skills-client.js');
+    assert.deepEqual(parseFrontmatter('# Just a heading\ntext'), {});
   });
 });
 

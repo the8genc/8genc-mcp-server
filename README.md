@@ -83,7 +83,7 @@ Add to your Claude Code, Cursor, or Windsurf MCP config:
 }
 ```
 
-## Tools (18)
+## Tools (23)
 
 ### Generation (4 tools)
 
@@ -147,6 +147,48 @@ PRDs are stored as ZeroDB **plan artifacts** — a purpose-built storage format 
 | `prd_suggest_stack` | Given requirements, suggest which AINative services to use with justifications. |
 
 **Known AINative services:** ZeroDB, ZeroMemory, Agent Cloud, AI Kit, Cody CLI, Chat Completions API, Live Streaming, Multimodal Generation, Embeddings API, Echo Developer Program, OpenCap Stack, ZeroInvoice, ZeroCommerce, ZeroPipeline, Browser Agent, Content Workflow, AX Audit, Community Platform, MCP Hosting, Sequential Thinking, Agent402, QNN API
+
+### Skills — GitHub-backed, ZeroDB-cached (5 tools)
+
+| Tool | Description |
+|------|-------------|
+| `skill_list` | List Agent Skills in the skills repo (pulled live from GitHub). |
+| `skill_get` | Get a skill's full `SKILL.md` body (optionally with all reference files). |
+| `skill_get_reference` | Get a single reference file for a skill, on demand. |
+| `skill_search` | Find the right skill for a task — ZeroDB semantic search, GitHub keyword fallback. |
+| `skill_sync` | Mirror skills from GitHub into ZeroDB for semantic search + offline use. |
+
+Skills are also exposed as **MCP prompts**: every skill in the repo shows up as a
+selectable prompt (name = its slug), with an optional `input` argument for the task
+to apply it to.
+
+**Source of truth is the GitHub repo** (`SKILLS_REPO`, default
+[`the8genc/ai-8gent-skills`](https://github.com/the8genc/ai-8gent-skills)) laid out
+as `skills/<slug>/SKILL.md` + `skills/<slug>/references/*.md`. ZeroDB is a cache and
+semantic-search layer — author skills in GitHub, then `skill_sync` to refresh the
+mirror. `skill_list` / `skill_get` work without any credentials; `skill_search`
+(semantic) and `skill_sync` use ZeroDB.
+
+## Transports & Hosting
+
+The server speaks MCP over two transports:
+
+- **stdio** — default for local use (`npx ainative-prd-mcp`)
+- **Streamable HTTP** — auto-selected when `$PORT` is set (Railway), or forced with
+  `MCP_TRANSPORT=http`. Serves `POST /mcp` plus a `GET /` health check.
+
+Hosted at `https://ainative-prd-mcp-production.up.railway.app/mcp`:
+
+```json
+{
+  "mcpServers": {
+    "prd-generator": {
+      "type": "http",
+      "url": "https://ainative-prd-mcp-production.up.railway.app/mcp"
+    }
+  }
+}
+```
 
 ## Examples
 

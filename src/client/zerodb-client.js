@@ -15,11 +15,25 @@ const DEFAULT_BASE_URL = 'https://api.ainative.studio';
 
 export class ZeroDBClient {
   constructor(config = {}) {
-    this.baseUrl = config.baseUrl || process.env.ZERODB_BASE_URL || DEFAULT_BASE_URL;
-    this.apiKey = config.apiKey || process.env.ZERODB_API_KEY || null;
-    this.projectId = config.projectId || process.env.ZERODB_PROJECT_ID || null;
-    this.username = config.username || process.env.ZERODB_USERNAME || null;
-    this.password = config.password || process.env.ZERODB_PASSWORD || null;
+    // ZERODB_* is canonical; AINATIVE_* are accepted as aliases so the
+    // Railway deployment (which sets AINATIVE_API_KEY / AINATIVE_API_URL)
+    // authenticates against the real account instead of auto-provisioning.
+    this.baseUrl =
+      config.baseUrl ||
+      process.env.ZERODB_BASE_URL ||
+      process.env.ZERODB_API_URL ||
+      process.env.AINATIVE_API_URL ||
+      process.env.API_BASE_URL ||
+      DEFAULT_BASE_URL;
+    this.apiKey =
+      config.apiKey ||
+      process.env.ZERODB_API_KEY ||
+      process.env.AINATIVE_API_KEY ||
+      process.env.AINATIVE_API_TOKEN ||
+      null;
+    this.projectId = config.projectId || process.env.ZERODB_PROJECT_ID || process.env.AINATIVE_PROJECT_ID || null;
+    this.username = config.username || process.env.ZERODB_USERNAME || process.env.AINATIVE_USERNAME || null;
+    this.password = config.password || process.env.ZERODB_PASSWORD || process.env.AINATIVE_PASSWORD || null;
     this.token = null;
     this.tokenExpiry = null;
   }
