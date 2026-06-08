@@ -30,6 +30,12 @@
  *   MCP_TRANSPORT=http PORT=8080 node index.js
  */
 
+import { webcrypto } from 'node:crypto';
+// The MCP Streamable HTTP transport relies on the global Web Crypto API, which is
+// only a global on Node 19+. Polyfill it so the HTTP transport works on older
+// runtimes (e.g. Railway's default Node) regardless of version.
+if (!globalThis.crypto) globalThis.crypto = webcrypto;
+
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import dotenv from 'dotenv';
 import { createRequire } from 'module';
