@@ -18,7 +18,7 @@ import { hashPassword, verifyPassword, validatePasswordStrength } from '../auth/
 import { generatePat, randomToken, sha256 } from '../auth/tokens.js';
 import { setSessionCookie, clearSessionCookie, requireSession, requireAdmin, requirePasswordChange } from '../auth/session.js';
 import { loginLimiter, registerLimiter, passwordResetLimiter } from '../auth/rateLimit.js';
-import { sendEmail, portalLink } from '../email/sender.js';
+import { queueEmail, portalLink } from '../email/sender.js';
 import { socialStartRoutes, socialEnabled } from '../auth/social.js';
 
 const TOKEN_TTL_MS = 1000 * 60 * 60; // 1h for verify/reset links
@@ -207,20 +207,14 @@ export function createPortalApiRouter({ oauth = null } = {}) {
     const temp = randomToken(9);
     await users.setPassword(t.id, await hashPassword(temp), { clearMustChange: false });
     await markMustChange(t.id);
-    let emailed = false;
     if (t.email) {
-      try {
-        await sendEmail({
-          to: t.email,
-          subject: 'Your 8genC password was reset',
-          text: `An administrator reset your password.\n\nTemporary password: ${temp}\n\nLog in at ${portalLink('/login')} and change it immediately.\n`
-        });
-        emailed = true;
-      } catch (err) {
-        console.error('[portal] reset-password email failed:', err.message);
-      }
+      queueEmail({
+        to: t.email,
+        subject: 'Your 8genC password was reset',
+        text: `An administrator reset your password.\n\nTemporary password: ${temp}\n\nLog in at ${portalLink('/login')} and change it immediately.\n`
+      });
     }
-    return ok(res, { tempPassword: temp, emailed, message: 'Temporary password set; the user must change it on next login.' });
+    return ok(res, { tempPassword: temp, message: 'Temporary password set; the user must change it on next login.' });
   }));
 
   // ── OAuth (authorization-server) consent + social login (PR3) ──
@@ -270,7 +264,8 @@ async function issueEmailToken(user, purpose, subject, path) {
     expiresAt: new Date(Date.now() + TOKEN_TTL_MS)
   });
   const link = portalLink(path, { token });
-  await sendEmail({ to: user.email, subject, text: `${subject}\n\nOpen this link (valid 1 hour):\n${link}\n` });
+  // Fire-and-forget so a slow/blocked provider never hangs the request.
+  queueEmail({ to: user.email, subject, text: `${subject}\n\nOpen this link (valid 1 hour):\n${link}\n` });
 }
 
 async function markMustChange(userId) {
