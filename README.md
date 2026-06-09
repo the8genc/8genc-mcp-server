@@ -162,6 +162,39 @@ Hosted at `https://mcp.8genc.com/mcp` (also reachable at the Railway domain
 }
 ```
 
+## Access control (OAuth2 + portal)
+
+When `DATABASE_URL` is set, `POST /mcp` is **protected** — every request must carry a valid
+credential for an **approved** account, and a web portal is served at
+**`https://mcp.8genc.com/access`**. (Without `DATABASE_URL` the server runs unauthenticated, for
+local/stdio use.)
+
+**Two ways to authenticate** — both gated on account status `approved`:
+
+1. **OAuth 2.1 (browser sign-in at connect)** — the server is its own authorization server
+   (`mcpAuthRouter`, RFC 9728 metadata + PKCE). Clients that support MCP OAuth (e.g. Claude) open a
+   browser, you sign in (email/password, or Google/GitHub when configured), consent, and the client
+   receives a token.
+2. **Personal access token** — create one in the portal and add it as a Bearer header:
+   ```json
+   { "mcpServers": { "prd-generator": {
+       "type": "http", "url": "https://mcp.8genc.com/mcp",
+       "headers": { "Authorization": "Bearer 8genc_pat_…" } } } }
+   ```
+
+**The portal (`/access`)** has two personas:
+- **Users** — register, verify email, manage profile/password, create & revoke personal access
+  tokens, see approval status + connection instructions.
+- **Admins** — approve/reject pending accounts, block/unblock, reset passwords, and elevate
+  email-verified users to admin.
+
+New accounts are **pending until an admin approves**. The first admin is seeded as `admin`/`admin`
+and must change its password on first login.
+
+**Config** (see `.env.example`): `DATABASE_URL` (Postgres), `JWT_SECRET`, `PUBLIC_BASE_URL`,
+`ADMIN_SEED_PASSWORD`, optional `GOOGLE_*`/`GITHUB_*` for social login, and `EMAIL_*` for
+verification/reset delivery (defaults to dev-mode, logging links to stdout).
+
 ## Examples
 
 ### Write a PRD (via the skill)
