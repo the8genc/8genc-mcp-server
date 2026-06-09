@@ -17,30 +17,22 @@ import {
   GetPromptRequestSchema
 } from '@modelcontextprotocol/sdk/types.js';
 
-import { GENERATION_TOOLS, executeGenerationTool } from './tools/generation-tools.js';
-import { TEMPLATE_TOOLS, executeTemplateTool } from './tools/template-tools.js';
-import { VALIDATION_TOOLS, executeValidationTool } from './tools/validation-tools.js';
-import { MEMORY_TOOLS, executeMemoryTool } from './tools/memory-tools.js';
 import { PLATFORM_TOOLS, executePlatformTool } from './tools/platform-tools.js';
 import { SKILL_TOOLS, executeSkillTool } from './tools/skill-tools.js';
 
+// PRD generation/validation/templates/memory are no longer server tools — that
+// capability now lives in the `prd-generator` Agent Skill (the8genc/ai-8gent-skills),
+// loaded at runtime via the skill_* tools and surfaced as an MCP prompt. The server
+// keeps only platform discovery + skills delivery.
 export const ALL_TOOLS = [
-  ...GENERATION_TOOLS,
-  ...TEMPLATE_TOOLS,
-  ...VALIDATION_TOOLS,
-  ...MEMORY_TOOLS,
   ...PLATFORM_TOOLS,
   ...SKILL_TOOLS
 ];
 
-// Map each tool name to its executor. PRD tools take (name, args, client);
-// skill tools take (name, args, ctx). We normalize by passing the right object.
-const PRD_EXECUTORS = {};
-for (const t of GENERATION_TOOLS) PRD_EXECUTORS[t.name] = executeGenerationTool;
-for (const t of TEMPLATE_TOOLS) PRD_EXECUTORS[t.name] = executeTemplateTool;
-for (const t of VALIDATION_TOOLS) PRD_EXECUTORS[t.name] = executeValidationTool;
-for (const t of MEMORY_TOOLS) PRD_EXECUTORS[t.name] = executeMemoryTool;
-for (const t of PLATFORM_TOOLS) PRD_EXECUTORS[t.name] = executePlatformTool;
+// Map each non-skill tool name to its executor. Platform tools take (name, args, client);
+// skill tools take (name, args, ctx) and are dispatched separately below.
+const PLATFORM_EXECUTORS = {};
+for (const t of PLATFORM_TOOLS) PLATFORM_EXECUTORS[t.name] = executePlatformTool;
 
 const SKILL_TOOL_NAMES = new Set(SKILL_TOOLS.map((t) => t.name));
 
@@ -75,7 +67,7 @@ export function createMcpServer(ctx) {
       if (SKILL_TOOL_NAMES.has(name)) {
         result = await executeSkillTool(name, args || {}, ctx);
       } else {
-        const executor = PRD_EXECUTORS[name];
+        const executor = PLATFORM_EXECUTORS[name];
         if (!executor) {
           return errorResult(`Unknown tool: ${name}`);
         }

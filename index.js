@@ -1,24 +1,22 @@
 #!/usr/bin/env node
 
 /**
- * AINative PRD Generator MCP Server
+ * 8genC MCP Server
  *
- * Generate, validate, and manage Product Requirement Documents with:
+ * AINative platform discovery + a GitHub-backed Agent Skills library:
  * - Full AINative platform awareness (22 products, 1968 API endpoints)
- * - ZeroMemory persistence (PRDs survive across sessions with version history)
- * - Template system (built-in + custom, stored in ZeroDB)
  * - Agent Skills pulled from a GitHub repo (the8genc/ai-8gent-skills) and
  *   cached in ZeroDB — exposed as both MCP tools and MCP prompts
- * - Validation against real AINative API specs and architecture constraints
  * - Auto-provisioning: no account needed to start, free instant database
  *
- * 23 tools + skills-as-prompts across 6 categories:
- *   Generation (4): prd_generate, prd_generate_section, prd_refine, prd_from_issue
- *   Templates  (4): prd_list_templates, prd_get_template, prd_create_template, prd_render_template
- *   Validation (3): prd_validate, prd_score, prd_check_api_refs
- *   Memory     (4): prd_save, prd_load, prd_search, prd_history
- *   Platform   (3): prd_list_services, prd_get_api_catalog, prd_suggest_stack
- *   Skills     (5): skill_list, skill_get, skill_get_reference, skill_search, skill_sync
+ * PRD generation/validation/templates/memory are no longer server tools — that
+ * capability now lives in the `prd-generator` Agent Skill (the8genc/ai-8gent-skills),
+ * loaded at runtime via the skill_* tools / MCP prompt. The skill calls the platform
+ * tools below and the agent's own ZeroDB memory tools for persistence.
+ *
+ * 8 tools + skills-as-prompts across 2 categories:
+ *   Platform (3): prd_list_services, prd_get_api_catalog, prd_suggest_stack
+ *   Skills   (5): skill_list, skill_get, skill_get_reference, skill_search, skill_sync
  *
  * Transports:
  *   stdio  — default for local use (`npx 8genc-mcp-server`)
@@ -187,16 +185,16 @@ if (!hasCreds()) {
 async function main() {
   // Banner
   console.error('\n');
-  console.error('  ██████╗ ██████╗ ██████╗');
-  console.error('  ██╔══██╗██╔══██╗██╔══██╗');
-  console.error('  ██████╔╝██████╔╝██║  ██║');
-  console.error('  ██╔═══╝ ██╔══██╗██║  ██║');
-  console.error('  ██║     ██║  ██║██████╔╝');
-  console.error('  ╚═╝     ╚═╝  ╚═╝╚═════╝');
-  console.error('\n  AINative PRD Generator');
+  console.error('   █████╗  ██████╗ ███████╗███╗   ██╗ ██████╗');
+  console.error('  ██╔══██╗██╔════╝ ██╔════╝████╗  ██║██╔════╝');
+  console.error('  ╚█████╔╝██║  ███╗█████╗  ██╔██╗ ██║██║     ');
+  console.error('  ██╔══██╗██║   ██║██╔══╝  ██║╚██╗██║██║     ');
+  console.error('  ╚█████╔╝╚██████╔╝███████╗██║ ╚████║╚██████╗');
+  console.error('   ╚════╝  ╚═════╝ ╚══════╝╚═╝  ╚═══╝ ╚═════╝');
+  console.error('\n  8genC MCP Server');
   console.error('\n===========================================');
-  console.error(`  PRD Generator MCP Server v${PKG_VERSION}`);
-  console.error('  Powered by ZeroDB + ZeroMemory');
+  console.error(`  8genC MCP Server v${PKG_VERSION}`);
+  console.error('  AINative platform discovery + Agent Skills');
   console.error('===========================================\n');
 
   // Initialize ZeroDB client
@@ -214,11 +212,11 @@ async function main() {
 
   if (client.isAuthenticated) {
     console.error(`  Connected to ZeroDB (${client.baseUrl})`);
-    console.error(`  All ${ALL_TOOLS.length} tools available (generation + memory + validation + skills)\n`);
+    console.error(`  All ${ALL_TOOLS.length} tools available (platform discovery + skills)\n`);
   } else {
     console.error('  Running without ZeroDB credentials');
-    console.error('  PRD generation/validation/platform/skills tools work');
-    console.error('  Memory/persistence + skill_search/skill_sync require auth\n');
+    console.error('  Platform discovery + skill_list/skill_get work');
+    console.error('  skill_search/skill_sync require auth\n');
   }
   console.error(`  Skills source: ${skills.repo}@${skills.branch}\n`);
 
