@@ -204,6 +204,11 @@ export function createPortalApiRouter({ oauth = null } = {}) {
   }));
 
   router.post('/admin/users/:id/reset-password', ...adminAction(async (req, res, t) => {
+    // Block self-reset: it sets a random temp password + must_change, which locks
+    // the admin out if email delivery is unavailable. Use change-password instead.
+    if (t.id === req.sessionUser.id) {
+      return fail(res, 400, 'cannot_reset_self', { message: 'Use Change Password for your own account.' });
+    }
     const temp = randomToken(9);
     await users.setPassword(t.id, await hashPassword(temp), { clearMustChange: false });
     await markMustChange(t.id);

@@ -20,15 +20,19 @@ export function mountPortalStatic(app) {
     console.error('[portal] web/dist not built — /access portal not served (run `npm run build`)');
     return false;
   }
-  // Static assets (hashed filenames) under /access. redirect:false so a bare
-  // /access doesn't 301 to /access/ — the SPA fallback below serves it directly.
+  // Content-hashed assets can be cached long-term; index.html must NOT be cached
+  // so clients always pick up the latest bundle after a deploy.
   app.use('/access', express.static(DIST, { index: false, redirect: false }));
 
+  const sendIndex = (_req, res) => {
+    res.set('Cache-Control', 'no-store');
+    res.sendFile(INDEX);
+  };
   // SPA fallback for client-side routes, excluding the API namespace.
-  app.get('/access', (_req, res) => res.sendFile(INDEX));
+  app.get('/access', sendIndex);
   app.get('/access/*splat', (req, res, next) => {
     if (req.path.startsWith('/access/api/')) return next();
-    res.sendFile(INDEX);
+    sendIndex(req, res);
   });
   return true;
 }
