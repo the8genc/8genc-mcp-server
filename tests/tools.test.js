@@ -10,9 +10,9 @@ const ROOT = join(__dirname, '..');
 describe('PRD MCP Server - Package Structure', () => {
   it('has valid package.json', () => {
     const pkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8'));
-    assert.equal(pkg.name, 'ainative-prd-mcp');
+    assert.equal(pkg.name, '8genc-mcp-server');
     assert.equal(pkg.type, 'module');
-    assert.ok(pkg.bin['ainative-prd-mcp']);
+    assert.ok(pkg.bin['8genc-mcp-server']);
   });
 
   it('has all required source files', () => {

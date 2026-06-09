@@ -44,7 +44,7 @@ export class SkillsClient {
   _apiHeaders() {
     const h = {
       Accept: 'application/vnd.github+json',
-      'User-Agent': 'ainative-prd-mcp',
+      'User-Agent': '8genc-mcp-server',
       'X-GitHub-Api-Version': '2022-11-28'
     };
     if (this.token) h.Authorization = `Bearer ${this.token}`;
@@ -65,7 +65,7 @@ export class SkillsClient {
 
   async getRaw(path) {
     const url = `${GITHUB_RAW}/${this.repo}/${this.branch}/${path}`;
-    const headers = { 'User-Agent': 'ainative-prd-mcp' };
+    const headers = { 'User-Agent': '8genc-mcp-server' };
     if (this.token) headers.Authorization = `Bearer ${this.token}`;
     try {
       const res = await axios.get(url, {

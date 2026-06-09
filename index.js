@@ -21,11 +21,11 @@
  *   Skills     (5): skill_list, skill_get, skill_get_reference, skill_search, skill_sync
  *
  * Transports:
- *   stdio  — default for local use (`npx ainative-prd-mcp`)
+ *   stdio  — default for local use (`npx 8genc-mcp-server`)
  *   http   — Streamable HTTP, used on Railway (auto when $PORT is set)
  *
  * Usage:
- *   npx ainative-prd-mcp                    # stdio, auto-provisions on first run
+ *   npx 8genc-mcp-server                    # stdio, auto-provisions on first run
  *   PORT=8080 node index.js                 # Streamable HTTP on :8080
  *   MCP_TRANSPORT=http PORT=8080 node index.js
  */
@@ -51,7 +51,7 @@ import { startHttpServer } from './src/transport/http.js';
 // Load .env
 dotenv.config();
 
-const SERVER_NAME = 'ainative-prd-mcp';
+const SERVER_NAME = '8genc-mcp-server';
 
 const hasCreds = () =>
   !!(
@@ -140,7 +140,7 @@ if (!hasCreds()) {
         mcpServers: {
           'prd-generator': {
             command: 'npx',
-            args: ['-y', 'ainative-prd-mcp'],
+            args: ['-y', '8genc-mcp-server'],
             env: {
               ZERODB_API_KEY: creds.api_key,
               ZERODB_PROJECT_ID: creds.project_id,
@@ -166,7 +166,7 @@ if (!hasCreds()) {
 
       // Append to .env
       const envPath = join(process.cwd(), '.env');
-      const envBlock = `\n# ZeroDB (auto-provisioned by ainative-prd-mcp)\nZERODB_API_KEY=${creds.api_key}\nZERODB_PROJECT_ID=${creds.project_id}\nZERODB_API_URL=https://api.ainative.studio\n`;
+      const envBlock = `\n# ZeroDB (auto-provisioned by 8genc-mcp-server)\nZERODB_API_KEY=${creds.api_key}\nZERODB_PROJECT_ID=${creds.project_id}\nZERODB_API_URL=https://api.ainative.studio\n`;
       if (existsSync(envPath)) {
         if (!readFileSync(envPath, 'utf-8').includes('ZERODB_API_KEY')) appendFileSync(envPath, envBlock);
       } else writeFileSync(envPath, envBlock.trimStart());

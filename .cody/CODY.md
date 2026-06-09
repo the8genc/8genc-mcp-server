@@ -62,7 +62,7 @@ Surface this claim URL to the user so they can take ownership of their PRD stora
   "mcpServers": {
     "prd-generator": {
       "command": "npx",
-      "args": ["-y", "ainative-prd-mcp"],
+      "args": ["-y", "8genc-mcp-server"],
       "env": { "ZERODB_API_KEY": "ak_your_key" }
     }
   }

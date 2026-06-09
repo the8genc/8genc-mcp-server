@@ -1,4 +1,4 @@
-# AINative PRD Generator MCP Server
+# 8genC MCP Server
 
 **Generate production-ready Product Requirement Documents with full AINative platform awareness and persistent memory.**
 
@@ -37,7 +37,7 @@ npx zerodb-cli init          # Interactive setup
 ### Option 1: npx (recommended)
 
 ```bash
-npx ainative-prd-mcp
+npx 8genc-mcp-server
 ```
 
 On first run with no credentials, the server:
@@ -48,7 +48,7 @@ On first run with no credentials, the server:
 ### Option 2: With existing API key
 
 ```bash
-ZERODB_API_KEY=ak_your_key npx ainative-prd-mcp
+ZERODB_API_KEY=ak_your_key npx 8genc-mcp-server
 ```
 
 ### MCP Configuration
@@ -60,7 +60,7 @@ Add to your Claude Code, Cursor, or Windsurf MCP config:
   "mcpServers": {
     "prd-generator": {
       "command": "npx",
-      "args": ["-y", "ainative-prd-mcp"],
+      "args": ["-y", "8genc-mcp-server"],
       "env": {
         "ZERODB_API_KEY": "ak_your_key",
         "ZERODB_API_URL": "https://api.ainative.studio"
@@ -77,7 +77,7 @@ Add to your Claude Code, Cursor, or Windsurf MCP config:
   "mcpServers": {
     "prd-generator": {
       "command": "npx",
-      "args": ["-y", "ainative-prd-mcp"]
+      "args": ["-y", "8genc-mcp-server"]
     }
   }
 }
@@ -173,7 +173,7 @@ mirror. `skill_list` / `skill_get` work without any credentials; `skill_search`
 
 The server speaks MCP over two transports:
 
-- **stdio** — default for local use (`npx ainative-prd-mcp`)
+- **stdio** — default for local use (`npx 8genc-mcp-server`)
 - **Streamable HTTP** — auto-selected when `$PORT` is set (Railway), or forced with
   `MCP_TRANSPORT=http`. Serves `POST /mcp` plus a `GET /` health check.
 
@@ -240,7 +240,7 @@ Result: Score 73/100 (C)
 ## Architecture
 
 ```
-ainative-prd-mcp/
+8genc-mcp-server/
 ├── index.js                          # MCP server + auto-provisioning
 ├── src/
 │   ├── client/zerodb-client.js       # ZeroDB API client (auth, plans, memory, chat)
@@ -265,8 +265,8 @@ ainative-prd-mcp/
 ## Development
 
 ```bash
-git clone https://github.com/AINative-Studio/ainative-prd-mcp.git
-cd ainative-prd-mcp
+git clone https://github.com/the8genc/8genc-mcp-server.git
+cd 8genc-mcp-server
 npm install
 npm test              # Run 22 tests
 npm run test:coverage # With coverage report

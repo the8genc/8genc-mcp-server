@@ -3,7 +3,7 @@
  *
  * Builds a fully-wired MCP Server (tools + prompts) against a shared context
  * (the ZeroDB client + the Skills client). Used by both transports:
- *   - stdio  (local `npx ainative-prd-mcp`)
+ *   - stdio  (local `npx 8genc-mcp-server`)
  *   - HTTP   (Railway / Streamable HTTP)
  *
  * Stateless HTTP creates one Server per request, so this must be cheap to call.

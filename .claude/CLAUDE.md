@@ -1,4 +1,4 @@
-# AINative PRD Generator MCP — Usage Guide
+# 8genC MCP Server — Usage Guide
 
 This MCP server generates, validates, and manages Product Requirement Documents with full AINative platform awareness.
 
@@ -90,7 +90,7 @@ If no `ZERODB_API_KEY` is set, the server automatically provisions a free ZeroDB
 
 The server speaks MCP over two transports, selected at startup:
 
-- **stdio** (default for local use) — `npx ainative-prd-mcp`
+- **stdio** (default for local use) — `npx 8genc-mcp-server`
 - **Streamable HTTP** — used automatically when `$PORT` is set (Railway), or force
   with `MCP_TRANSPORT=http`. Serves MCP at `POST /mcp` and a health check at `GET /`.
 
@@ -124,7 +124,7 @@ MCP client config for the hosted server:
   "mcpServers": {
     "prd-generator": {
       "command": "npx",
-      "args": ["-y", "ainative-prd-mcp"],
+      "args": ["-y", "8genc-mcp-server"],
       "env": {
         "ZERODB_API_KEY": "ak_your_key",
         "ZERODB_API_URL": "https://api.ainative.studio"

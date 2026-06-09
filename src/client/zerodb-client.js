@@ -86,7 +86,7 @@ export class ZeroDBClient {
         api_key,
         project_id,
         base_url: this.baseUrl,
-        provisioned_by: 'ainative-prd-mcp'
+        provisioned_by: '8genc-mcp-server'
       }, null, 2));
     } catch (err) {
       // Auto-provision failed — tools will work in template-only mode
