@@ -19,6 +19,7 @@ import { generatePat, randomToken, sha256 } from '../auth/tokens.js';
 import { setSessionCookie, clearSessionCookie, requireSession, requireAdmin } from '../auth/session.js';
 import { loginLimiter, registerLimiter, passwordResetLimiter } from '../auth/rateLimit.js';
 import { sendEmail, portalLink } from '../email/sender.js';
+import { socialStartRoutes, socialEnabled } from '../auth/social.js';
 
 const TOKEN_TTL_MS = 1000 * 60 * 60; // 1h for verify/reset links
 
@@ -32,7 +33,7 @@ function uniqueViolation(err) {
   return err && err.code === '23505';
 }
 
-export function createPortalApiRouter() {
+export function createPortalApiRouter({ oauth = null } = {}) {
   const router = Router();
 
   // ── Register ──────────────────────────────────────────────────
@@ -202,6 +203,34 @@ export function createPortalApiRouter() {
     await markMustChange(t.id);
     return ok(res, { tempPassword: temp, message: 'Share this temporary password; the user must change it on next login.' });
   }));
+
+  // ── OAuth (authorization-server) consent + social login (PR3) ──
+  // Which social providers are configured (public — used by the login UI).
+  router.get('/oauth/providers', (_req, res) => ok(res, { providers: socialEnabled() }));
+
+  if (oauth) {
+    // Social login start: GET /oauth/:provider/start?ticket=...
+    router.use('/oauth', socialStartRoutes());
+
+    // Describe a pending authorize ticket (for the consent screen).
+    router.get('/oauth/ticket', async (req, res) => {
+      const info = await oauth.describeTicket(String(req.query.ticket || ''));
+      if (!info) return fail(res, 400, 'invalid_ticket');
+      return ok(res, info);
+    });
+
+    // Consent: the logged-in, approved user authorizes the client → mint a code.
+    router.post('/oauth/consent', requireSession(), async (req, res) => {
+      const claims = oauth.verifyTicket(String(req.body?.ticket || ''));
+      if (!claims) return fail(res, 400, 'invalid_ticket');
+      if (req.sessionUser.must_change_password) return fail(res, 409, 'must_change_password');
+      if (req.sessionUser.status !== 'approved') {
+        return fail(res, 403, 'not_approved', { status: req.sessionUser.status });
+      }
+      const redirectTo = await oauth.mintCodeForApprovedUser(claims, req.sessionUser);
+      return ok(res, { redirectTo });
+    });
+  }
 
   return router;
 }

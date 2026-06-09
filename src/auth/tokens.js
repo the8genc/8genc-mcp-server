@@ -63,3 +63,18 @@ export function verifyAccessJwt(token) {
     return null;
   }
 }
+
+// ── OAuth authorize "ticket" (carries pending authorize params across login) ──
+export function signTicket(payload) {
+  return jwt.sign({ ...payload, typ: 'oauth_ticket' }, config.jwtSecret, { expiresIn: 600 });
+}
+
+export function verifyTicket(token) {
+  try {
+    const claims = jwt.verify(token, config.jwtSecret);
+    if (claims.typ !== 'oauth_ticket') return null;
+    return claims;
+  } catch {
+    return null;
+  }
+}

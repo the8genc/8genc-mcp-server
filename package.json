@@ -55,6 +55,7 @@
   "homepage": "https://github.com/the8genc/8genc-mcp-server#readme",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.24.0",
+    "arctic": "^2.3.4",
     "axios": "^1.7.7",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.7",

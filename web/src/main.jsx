@@ -8,6 +8,7 @@ import { RequireAuth, RequireAdmin } from './components/guards.jsx';
 import Layout from './components/Layout.jsx';
 
 import Login from './routes/Login.jsx';
+import Authorize from './routes/Authorize.jsx';
 import Register from './routes/Register.jsx';
 import VerifyEmail from './routes/VerifyEmail.jsx';
 import ForgotPassword from './routes/ForgotPassword.jsx';
@@ -27,6 +28,7 @@ createRoot(document.getElementById('root')).render(
         <Routes>
           {/* Public */}
           <Route path="/login" element={<Login />} />
+          <Route path="/authorize" element={<Authorize />} />
           <Route path="/register" element={<Register />} />
           <Route path="/verify-email" element={<VerifyEmail />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />

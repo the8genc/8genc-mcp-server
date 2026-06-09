@@ -73,6 +73,8 @@ export async function startHttpServer({ createServer, port, host = '0.0.0.0', se
 
   // OAuth authorization-server endpoints + RFC 9728 metadata (PR3).
   if (auth?.oauthRouter) app.use(auth.oauthRouter);
+  // Social login callbacks (/auth/:provider/callback), mounted at root.
+  if (auth?.socialCallbackRouter) app.use(auth.socialCallbackRouter);
 
   // Portal REST API.
   if (auth?.portalApiRouter) app.use('/access/api', auth.portalApiRouter);
