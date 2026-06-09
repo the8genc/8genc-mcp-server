@@ -10,6 +10,8 @@
   "scripts": {
     "start": "node index.js",
     "migrate": "node src/db/migrate.js",
+    "build": "npm --prefix web ci && npm --prefix web run build",
+    "build:web": "npm --prefix web run build",
     "test": "node --test tests/*.test.js",
     "test:coverage": "c8 node --test tests/*.test.js"
   },

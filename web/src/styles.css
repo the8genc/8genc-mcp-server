@@ -1,0 +1,39 @@
+:root {
+  --bg: #0b0e14; --panel: #141a24; --border: #232b39; --fg: #e6edf3;
+  --muted: #8b97a7; --accent: #4f8cff; --danger: #ff5c5c; --ok: #3ecf8e; --warn: #f2c94c;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg);
+  font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+a { color: var(--accent); text-decoration: none; }
+.wrap { max-width: 880px; margin: 0 auto; padding: 24px 16px 64px; }
+.card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+  padding: 24px; margin: 16px 0; }
+.auth-card { max-width: 420px; margin: 56px auto; }
+h1 { font-size: 22px; margin: 0 0 4px; } h2 { font-size: 17px; margin: 0 0 12px; }
+label { display: block; font-size: 13px; color: var(--muted); margin: 12px 0 4px; }
+input, select { width: 100%; padding: 10px 12px; background: #0e131c; color: var(--fg);
+  border: 1px solid var(--border); border-radius: 8px; font-size: 14px; }
+button { cursor: pointer; border: 0; border-radius: 8px; padding: 10px 14px;
+  background: var(--accent); color: #fff; font-size: 14px; font-weight: 600; }
+button.secondary { background: #1e2735; color: var(--fg); border: 1px solid var(--border); }
+button.danger { background: var(--danger); }
+button.ghost { background: transparent; color: var(--accent); padding: 6px 8px; }
+button:disabled { opacity: .5; cursor: not-allowed; }
+.row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.spread { display: flex; justify-content: space-between; align-items: center; }
+.muted { color: var(--muted); } .small { font-size: 13px; }
+.err { color: var(--danger); margin: 10px 0; } .ok { color: var(--ok); margin: 10px 0; }
+.badge { font-size: 12px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--border); }
+.badge.approved { color: var(--ok); border-color: var(--ok); }
+.badge.pending { color: var(--warn); border-color: var(--warn); }
+.badge.blocked { color: var(--danger); border-color: var(--danger); }
+.badge.admin { color: var(--accent); border-color: var(--accent); }
+nav.top { display: flex; gap: 16px; align-items: center; padding: 14px 16px;
+  border-bottom: 1px solid var(--border); background: var(--panel); }
+nav.top .grow { flex: 1; }
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--border); font-size: 13px; }
+code, pre { background: #0e131c; border: 1px solid var(--border); border-radius: 8px; }
+code { padding: 1px 6px; } pre { padding: 12px; overflow: auto; white-space: pre-wrap; }
+.mt { margin-top: 16px; }

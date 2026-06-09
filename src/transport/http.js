@@ -19,6 +19,7 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import { WebStandardStreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js';
 import { requireBearerAuth } from '@modelcontextprotocol/sdk/server/auth/middleware/bearerAuth.js';
+import { mountPortalStatic } from '../portal/static.js';
 
 function toWebRequest(req) {
   const proto = req.headers['x-forwarded-proto'] || (req.socket?.encrypted ? 'https' : 'http');
@@ -130,9 +131,9 @@ export async function startHttpServer({ createServer, port, host = '0.0.0.0', se
   });
   app.post('/mcp', ...mcpChain);
 
-  // Static portal (React build) is mounted by the caller via auth.mountStatic(app)
-  // so the SPA fallback is scoped to /access/* and cannot shadow /mcp or /.well-known.
-  if (auth?.mountStatic) auth.mountStatic(app);
+  // Static React portal at /access (SPA fallback scoped to /access/* — mounted
+  // after /mcp and the well-known/API routes so it cannot shadow them).
+  mountPortalStatic(app);
 
   // Stateless mode has no server-initiated stream / session to tear down.
   const methodNotAllowed = (_req, res) =>
