@@ -16,7 +16,9 @@
  */
 
 import express from 'express';
+import cookieParser from 'cookie-parser';
 import { WebStandardStreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js';
+import { requireBearerAuth } from '@modelcontextprotocol/sdk/server/auth/middleware/bearerAuth.js';
 
 function toWebRequest(req) {
   const proto = req.headers['x-forwarded-proto'] || (req.socket?.encrypted ? 'https' : 'http');
@@ -56,24 +58,50 @@ async function writeWebResponse(webRes, res) {
   }
 }
 
-export async function startHttpServer({ createServer, port, host = '0.0.0.0', serverName, version }) {
+/**
+ * @param {object} opts
+ * @param {object} [opts.auth]  When present, enables authentication:
+ *   { verifier, portalApiRouter, oauthRouter?, resourceMetadataUrl?, mountStatic? }
+ *   When absent, /mcp is unauthenticated (local/stdio parity, tests).
+ */
+export async function startHttpServer({ createServer, port, host = '0.0.0.0', serverName, version, auth = null }) {
   const app = express();
+  app.set('trust proxy', 1); // Railway terminates TLS; needed for secure cookies + rate-limit IPs
   app.use(express.json({ limit: '4mb' }));
+  app.use(cookieParser());
 
-  // Health / landing
+  // OAuth authorization-server endpoints + RFC 9728 metadata (PR3).
+  if (auth?.oauthRouter) app.use(auth.oauthRouter);
+
+  // Portal REST API.
+  if (auth?.portalApiRouter) app.use('/access/api', auth.portalApiRouter);
+
+  // Health / landing (always public — Railway healthcheck).
   const info = (_req, res) =>
     res.json({
       name: serverName,
       version,
       transport: 'streamable-http',
       endpoint: '/mcp',
+      authenticated: !!auth?.verifier,
       status: 'ok'
     });
   app.get('/', info);
   app.get('/health', info);
 
   // MCP endpoint — stateless: one Server + transport per request.
-  app.post('/mcp', async (req, res) => {
+  // When auth is enabled, requireBearerAuth runs first and sets req.auth.
+  const mcpChain = [];
+  if (auth?.verifier) {
+    mcpChain.push(
+      requireBearerAuth({
+        verifier: auth.verifier,
+        requiredScopes: ['mcp:tools'],
+        ...(auth.resourceMetadataUrl ? { resourceMetadataUrl: auth.resourceMetadataUrl } : {})
+      })
+    );
+  }
+  mcpChain.push(async (req, res) => {
     const server = createServer();
     const transport = new WebStandardStreamableHTTPServerTransport({ sessionIdGenerator: undefined });
 
@@ -84,7 +112,10 @@ export async function startHttpServer({ createServer, port, host = '0.0.0.0', se
 
     try {
       await server.connect(transport);
-      const webRes = await transport.handleRequest(toWebRequest(req), { parsedBody: req.body });
+      const webRes = await transport.handleRequest(toWebRequest(req), {
+        parsedBody: req.body,
+        authInfo: req.auth
+      });
       await writeWebResponse(webRes, res);
     } catch (err) {
       console.error(`[${serverName}] HTTP request error:`, err.message);
@@ -97,6 +128,11 @@ export async function startHttpServer({ createServer, port, host = '0.0.0.0', se
       }
     }
   });
+  app.post('/mcp', ...mcpChain);
+
+  // Static portal (React build) is mounted by the caller via auth.mountStatic(app)
+  // so the SPA fallback is scoped to /access/* and cannot shadow /mcp or /.well-known.
+  if (auth?.mountStatic) auth.mountStatic(app);
 
   // Stateless mode has no server-initiated stream / session to tear down.
   const methodNotAllowed = (_req, res) =>

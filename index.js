@@ -45,6 +45,8 @@ import { createMcpServer, ALL_TOOLS } from './src/server.js';
 import { ZeroDBClient } from './src/client/zerodb-client.js';
 import { SkillsClient } from './src/skills/skills-client.js';
 import { startHttpServer } from './src/transport/http.js';
+import { config } from './src/config.js';
+import { buildAuth } from './src/auth/buildAuth.js';
 
 // Load .env
 dotenv.config();
@@ -228,7 +230,20 @@ async function main() {
 
   if (transport === 'http') {
     const port = parseInt(process.env.PORT || '8080', 10);
-    await startHttpServer({ createServer, port, serverName: SERVER_NAME, version: PKG_VERSION });
+    // Build the auth bundle (migrations + verifier + portal API) when DATABASE_URL is set.
+    let auth = null;
+    if (config.authEnabled) {
+      try {
+        auth = await buildAuth();
+        console.error('  Auth enabled: /mcp requires an approved credential; portal at /access\n');
+      } catch (err) {
+        console.error(`  AUTH INIT FAILED (${err.message}). Refusing to start an unprotected server.`);
+        process.exit(1);
+      }
+    } else {
+      console.error('  Auth DISABLED (no DATABASE_URL): /mcp is open. Set DATABASE_URL to protect it.\n');
+    }
+    await startHttpServer({ createServer, port, serverName: SERVER_NAME, version: PKG_VERSION, auth });
     console.error(`  MCP Server listening on http://0.0.0.0:${port}/mcp (${ALL_TOOLS.length} tools)\n`);
   } else {
     const server = createServer();
