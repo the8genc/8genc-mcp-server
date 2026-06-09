@@ -1,39 +1,9 @@
 # 8genC MCP Server — Usage Guide
 
-This MCP server generates, validates, and manages Product Requirement Documents with full AINative platform awareness.
+This MCP server provides AINative platform discovery and a GitHub-backed Agent Skills library.
+PRD generation is delivered as the `prd-generator` Agent Skill (see below), not as server tools.
 
-## Available Tools (23)
-
-### Generation
-| Tool | Description |
-|------|-------------|
-| `prd_generate` | Generate a full PRD with AI + AINative platform context |
-| `prd_generate_section` | Generate a single PRD section for iterative refinement |
-| `prd_refine` | Refine an existing PRD based on feedback (version history tracked) |
-| `prd_from_issue` | Generate a PRD from a GitHub issue number |
-
-### Templates
-| Tool | Description |
-|------|-------------|
-| `prd_list_templates` | List built-in and custom PRD templates |
-| `prd_get_template` | Get a template with placeholder variables |
-| `prd_create_template` | Create a custom template (persisted in ZeroDB) |
-| `prd_render_template` | Render a template with variable substitution (no AI) |
-
-### Validation
-| Tool | Description |
-|------|-------------|
-| `prd_validate` | Validate PRD against 15 quality rules + AINative constraints |
-| `prd_score` | Score PRD completeness 0-100 with grade (A-F) |
-| `prd_check_api_refs` | Verify all API/service references exist in the platform |
-
-### Memory (ZeroDB-Powered)
-| Tool | Description |
-|------|-------------|
-| `prd_save` | Save PRD as a persistent plan artifact with version tracking |
-| `prd_load` | Load a saved PRD by ID (use at session start to resume work) |
-| `prd_search` | Semantic search across all saved PRDs |
-| `prd_history` | Get version history showing how a PRD evolved (diffs) |
+## Available Tools (8)
 
 ### Platform Discovery
 | Tool | Description |
@@ -59,15 +29,30 @@ selectable prompt (name = skill slug) whose body is the `SKILL.md`. An optional
 configurable via `SKILLS_REPO` / `SKILLS_BRANCH`). ZeroDB is a cache + search layer:
 edits land in GitHub, then `skill_sync` refreshes the ZeroDB mirror.
 
+## PRD Generation (Agent Skill)
+
+PRD authoring is the **`prd-generator`** skill in `the8genc/ai-8gent-skills`. To write,
+validate, score, or refine a PRD: load it with `skill_get prd-generator` (or select the
+`prd-generator` MCP prompt) and follow its workflow. The skill carries the templates, the
+15-rule validation rubric, the scoring algorithm, and the architecture constraints as
+reference files, and it orchestrates this server's platform tools plus your ZeroDB memory tools.
+
 ## Behavior Rules
 
-1. **Use `prd_list_services` first** — before writing any PRD, discover what AINative services are available so the PRD references real platform capabilities.
+1. **Load the `prd-generator` skill for any PRD work** — `skill_get prd-generator` first, then
+   follow its intake → template → discover → generate → validate → score → verify → persist flow.
 
-2. **Always save PRDs** — after generating or refining a PRD, call `prd_save` so the user can retrieve it in future sessions.
+2. **Use `prd_list_services` first** — before referencing AINative services in a PRD, discover
+   what's available with `prd_list_services` / `prd_suggest_stack` so it references real
+   platform capabilities. Verify API paths with `prd_get_api_catalog`.
 
-3. **Validate before finalizing** — run `prd_validate` and `prd_check_api_refs` before declaring a PRD complete.
+3. **Persist PRDs via ZeroDB memory tools** — the skill saves/recalls PRDs using your
+   `zerodb_store_memory` / `zerodb_search_memory` tools (there are no `prd_save`/`prd_load`
+   server tools). Store successive versions under a stable key for version history.
 
-4. **Use AINative-specific templates** — prefer `ainative-feature` or `agent-capability` templates over `standard` when the PRD is for an AINative platform feature.
+4. **Apply the validation rubric** — use the skill's `references/validation-rules.md` to validate
+   and score before declaring a PRD complete (replaces the old `prd_validate`/`prd_score`/
+   `prd_check_api_refs` tools).
 
 5. **Architecture compliance** — all PRDs must respect AINative constraints:
    - ZeroDB mandatory for data/memory (no third-party alternatives)
@@ -84,7 +69,7 @@ edits land in GitHub, then `skill_sync` refreshes the ZeroDB mirror.
 If no `ZERODB_API_KEY` is set, the server automatically provisions a free ZeroDB instance:
 - Credentials saved to `.mcp.json` and `.env`
 - A **claim URL** is printed — share this with the user so they can claim ownership
-- The provisioned instance works immediately for PRD storage and search
+- The provisioned instance works immediately for skill search/sync
 
 ## Transports
 
