@@ -83,3 +83,61 @@ export function canUserAccess(user, meta = {}) {
     enabled: meta.enabled !== false
   });
 }
+
+/**
+ * Decide access for a skill by slug against a loaded access set (Map<slug,meta>
+ * from skillAccess.loadAccessSet). admin/owner → true; a null access set (DB
+ * error) → deny (fail-closed); a slug absent from the catalog falls back to
+ * `defaultTier`.
+ */
+export function decideSlug(user, slug, accessSet, defaultTier) {
+  if (isAdmin(user)) return true;
+  if (!accessSet) return false; // fail-closed
+  const meta = accessSet.get(slug) || { tier: defaultTier, enabled: true };
+  return canUserAccess(user, meta);
+}
+
+/** Filter a skill_list / skill_search result object down to accessible skills. */
+export function filterSkillResult(result, user, accessSet, defaultTier) {
+  if (!result || typeof result !== 'object') return result;
+  if (Array.isArray(result.skills)) {
+    const skills = result.skills.filter((s) => decideSlug(user, s.slug, accessSet, defaultTier));
+    return { ...result, skills, count: skills.length };
+  }
+  if (Array.isArray(result.results)) {
+    const results = result.results.filter((r) => decideSlug(user, r.slug, accessSet, defaultTier));
+    return { ...result, results, count: results.length };
+  }
+  return result;
+}
+
+/**
+ * Render a client_contexts row into the injected "## Client Context" block, or
+ * null when there's nothing to inject. Pure; values are size-capped.
+ */
+export function buildClientContextBlock(row) {
+  if (!row) return null;
+  const files = Array.isArray(row.coda_files) ? row.coda_files : [];
+  const vars = row.variables && typeof row.variables === 'object' ? row.variables : {};
+  const varEntries = Object.entries(vars);
+  if (!files.length && !varEntries.length && !row.notes) return null;
+
+  let b =
+    `\n\n---\n\n## Client Context\n\nScoped knowledge for this engagement. Treat these as the authoritative data sources for this client; fetch their contents via your Coda MCP.\n`;
+  if (files.length) {
+    b += `\n**Coda files:**\n`;
+    for (const f of files.slice(0, 50)) {
+      const label = f.label || f.doc_id || f.url || 'document';
+      const ref = f.url || f.doc_id || '';
+      b += `- ${label}${ref ? ` — ${ref}` : ''}\n`;
+    }
+  }
+  if (varEntries.length) {
+    b += `\n**Variables:**\n`;
+    for (const [k, v] of varEntries.slice(0, 50)) {
+      b += `- ${k}: ${typeof v === 'string' ? v : JSON.stringify(v)}\n`;
+    }
+  }
+  if (row.notes) b += `\n**Notes:** ${String(row.notes).slice(0, 2000)}\n`;
+  return b;
+}
