@@ -8,7 +8,7 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html { -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; background: var(--surface-canvas); }
 
 body {
   margin: 0;
@@ -56,9 +56,10 @@ img { display: block; max-width: 100%; }
   background-image: repeating-linear-gradient(
     to bottom, rgba(255,255,255,0.025) 0 1px, transparent 1px 3px);
 }
-/* radial vignette to deepen the blackout */
+/* radial vignette — background-image so it overlays the canvas color. */
 .bg-vignette {
-  background:
+  background-color: var(--surface-canvas);
+  background-image:
     radial-gradient(120% 90% at 50% 0%, transparent 40%, rgba(0,0,0,0.55) 100%);
 }
 

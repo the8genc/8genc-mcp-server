@@ -9,7 +9,7 @@
 
 :root {
   /* --- Base ink ladder (dark → light) ------------------------ */
-  --ink-900: #08080A;   /* Blackout — primary canvas            */
+  --ink-900: #000000;   /* Blackout — primary canvas (true black) */
   --ink-850: #0E0E11;   /* Obsidian — deep panels               */
   --ink-800: #141417;   /* Graphite — raised surface / card     */
   --ink-700: #1C1C20;   /* Gunmetal — elevated panel            */
