@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { Navigate, useSearchParams } from 'react-router-dom';
 import { api } from '../api.js';
 import { useAuth } from '../auth/AuthContext.jsx';
+import AuthShell from '../components/AuthShell.jsx';
+import Icon from '../components/Icon.jsx';
 
 // OAuth consent screen. An MCP client's /authorize redirected here with a ticket.
 export default function Authorize() {
@@ -19,10 +21,8 @@ export default function Authorize() {
       .catch(() => setErr('This authorization request is invalid or expired.'));
   }, [ticket]);
 
-  if (loading) return <div className="wrap muted">Loading…</div>;
-  if (!ticket) return <div className="card auth-card"><p className="err">Missing authorization request.</p></div>;
-  // Not signed in → send to login, preserving the ticket.
-  if (!user) return <Navigate to={`/login?ticket=${encodeURIComponent(ticket)}`} replace />;
+  if (loading) return <div className="app-loading">Loading…</div>;
+  if (ticket && !user) return <Navigate to={`/login?ticket=${encodeURIComponent(ticket)}`} replace />;
   if (mustChangePassword) return <Navigate to="/change-password" replace />;
 
   const approve = async () => {
@@ -31,29 +31,25 @@ export default function Authorize() {
       const res = await api.post('/oauth/consent', { ticket });
       window.location.href = res.redirectTo; // back to the MCP client
     } catch (e) {
-      if (e.code === 'not_approved') setErr('Your account is awaiting admin approval — you cannot authorize clients yet.');
-      else setErr(e.message || 'Authorization failed.');
+      setErr(e.code === 'not_approved' ? 'Your account is awaiting admin approval — you cannot authorize clients yet.' : (e.message || 'Authorization failed.'));
       setBusy(false);
     }
   };
 
   return (
-    <div className="card auth-card">
-      <h1>Authorize access</h1>
-      {err && <div className="err">{err}</div>}
+    <AuthShell sub="A client is requesting authorization to connect to the 8genC MCP server on your behalf.">
+      <span className="eyebrow eyebrow--signal eyebrow-dot">OAuth consent</span>
+      <h2 className="auth-card__title">Authorize access</h2>
+      {err && <div className="form-msg form-msg--err">{err}</div>}
       {info && (
         <>
-          <p><strong>{info.clientName}</strong> wants to connect to the 8genC MCP server as <strong>{user.username}</strong>.</p>
-          <p className="muted small">Scopes: {(info.scopes || []).join(', ') || 'mcp:tools'}</p>
-          {user.status === 'approved' ? (
-            <div className="row mt">
-              <button disabled={busy} onClick={approve}>{busy ? 'Authorizing…' : 'Authorize'}</button>
-            </div>
-          ) : (
-            <p className="err">Your account ({user.status}) cannot authorize clients yet.</p>
-          )}
+          <p className="auth-card__sub"><strong>{info.clientName}</strong> wants to connect to the 8genC MCP server as <strong>{user.username}</strong>.</p>
+          <p className="mono" style={{ color: 'var(--text-muted)', fontSize: 'var(--fs-xs)', letterSpacing: 'var(--ls-wide)' }}>Scopes: {(info.scopes || []).join(', ') || 'mcp:tools'}</p>
+          {user.status === 'approved'
+            ? <button className="btn btn--signal btn--block btn--lg" disabled={busy} onClick={approve}>{busy ? 'Authorizing…' : 'Authorize'} <Icon name="shield-check" size={16} /></button>
+            : <p className="form-msg form-msg--err">Your account ({user.status}) cannot authorize clients yet.</p>}
         </>
       )}
-    </div>
+    </AuthShell>
   );
 }

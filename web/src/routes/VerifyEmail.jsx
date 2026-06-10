@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { api } from '../api.js';
+import AuthShell from '../components/AuthShell.jsx';
+import Icon from '../components/Icon.jsx';
 
 export default function VerifyEmail() {
   const [params] = useSearchParams();
@@ -12,12 +14,13 @@ export default function VerifyEmail() {
   }, [params]);
 
   return (
-    <div className="card auth-card">
-      <h1>Email verification</h1>
-      {state === 'working' && <p className="muted">Verifying…</p>}
-      {state === 'ok' && <p className="ok">Your email is verified. You can sign in once an admin approves your account.</p>}
-      {state === 'error' && <p className="err">This verification link is invalid or expired.</p>}
-      <Link to="/login">Back to sign in</Link>
-    </div>
+    <AuthShell>
+      <div className="auth-icon"><Icon name="mail-check" size={26} /></div>
+      <h2 className="auth-card__title">Email verification</h2>
+      {state === 'working' && <p className="auth-card__sub">Verifying…</p>}
+      {state === 'ok' && <p className="auth-card__sub">Your email is verified. You can sign in once an admin approves your account.</p>}
+      {state === 'error' && <p className="form-msg form-msg--err">This verification link is invalid or expired.</p>}
+      <Link className="btn btn--ghost btn--block" to="/login">Back to sign in</Link>
+    </AuthShell>
   );
 }

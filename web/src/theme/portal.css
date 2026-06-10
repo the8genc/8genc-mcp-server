@@ -1,0 +1,52 @@
+/* Portal-app-specific layout on top of the 8genC design system (styles.css + site.css).
+   The design's site.css already styles .auth-split/.auth-card/.field/.btn/.codeblock/
+   .token-table/.portal/.panel-block/.chip/etc — this file only fills app-shell gaps. */
+
+#root { min-height: 100vh; display: flex; flex-direction: column; }
+
+/* Auth split should fill the viewport below the header. */
+.access-main { flex: 1; }
+.auth-split { min-height: calc(100vh - 64px); }
+
+/* Generic loading / centered states */
+.app-loading {
+  flex: 1; display: grid; place-items: center;
+  color: var(--text-muted); font-family: var(--font-mono);
+  letter-spacing: var(--ls-wide); text-transform: uppercase; font-size: var(--fs-xs);
+}
+
+/* Inline form error / ok messages */
+.form-msg { margin: var(--space-3) 0 0; font-size: var(--fs-sm); }
+.form-msg--err { color: var(--alert-500); }
+.form-msg--ok { color: var(--ok-500); }
+
+/* Portal page wrapper (dashboard/tokens/profile/admin live inside .portal) */
+.portal { padding: var(--space-9) 0 var(--space-12); }
+.portal--narrow .portal__inner { max-width: 720px; }
+
+/* Admin user table reuses .token-table look */
+.utable td .row { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+
+/* Small helpers */
+.stack { display: flex; flex-direction: column; gap: var(--space-3); }
+.muted-note { color: var(--text-muted); font-size: var(--fs-sm); line-height: var(--lh-body); }
+.nowrap-actions { display: flex; gap: var(--space-2); flex-wrap: wrap; align-items: center; }
+.tabbar { display: flex; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-5); }
+
+/* Danger chip (design ships ok/warn/info/signal; add alert for blocked) */
+.chip--alert { color: var(--alert-500); border-color: color-mix(in srgb, var(--alert-500) 40%, transparent); background: var(--alert-tint); }
+.chip--alert .status-dot { background: var(--alert-500); }
+
+/* Ghost icon button for table actions */
+.iconbtn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  background: transparent; border: var(--border-hair) solid var(--border-subtle);
+  color: var(--text-secondary); border-radius: var(--radius-xs);
+  padding: 6px 10px; font-family: var(--font-mono); font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-wide); text-transform: uppercase; cursor: pointer;
+  transition: border-color var(--dur-2) var(--ease-out), color var(--dur-2) var(--ease-out);
+}
+.iconbtn:hover:not(:disabled) { border-color: var(--border-strong); color: var(--text-primary); }
+.iconbtn:disabled { opacity: .4; cursor: not-allowed; }
+.iconbtn--danger:hover:not(:disabled) { border-color: var(--alert-500); color: var(--alert-500); }
+

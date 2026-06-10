@@ -1,0 +1,121 @@
+/* ============================================================
+   8genC — COLOR SYSTEM
+   Blackout monochrome + a single tactical Signal accent.
+   The brand operates "in the dark": near-black canvases, a
+   warm off-white for dossier text, a grayscale ladder for
+   structure, and Signal Gold (#E4D789, from 8genc.com) used
+   sparingly like a targeting marker / highlight tab.
+   ============================================================ */
+
+:root {
+  /* --- Base ink ladder (dark → light) ------------------------ */
+  --ink-900: #08080A;   /* Blackout — primary canvas            */
+  --ink-850: #0E0E11;   /* Obsidian — deep panels               */
+  --ink-800: #141417;   /* Graphite — raised surface / card     */
+  --ink-700: #1C1C20;   /* Gunmetal — elevated panel            */
+  --ink-600: #26262B;   /* Steel — hairline borders, dividers   */
+  --ink-500: #34343A;   /* Iron — strong border / disabled fill */
+  --ink-400: #55555E;   /* Slate — muted icon / placeholder     */
+  --ink-300: #80808A;   /* Ash — secondary / metadata text      */
+  --ink-200: #A8A8B0;   /* Smoke — tertiary on dark             */
+  --ink-100: #C9C9CF;   /* Fog — faint labels                   */
+
+  /* --- Bone / paper (the "declassified document" side) ------- */
+  --bone-000: #FFFFFF;  /* Pure white                           */
+  --bone-100: #F4F2EC;  /* Bone — warm off-white, primary text  */
+  --bone-200: #E6E3DA;  /* Parchment — light-mode surface       */
+  --bone-300: #D6D2C6;  /* Manila — light-mode border           */
+
+  /* --- Signal (the one accent — house gold, from 8genc.com) --- */
+  --signal-700: #B9AB54;  /* pressed                            */
+  --signal-600: #D3C66E;  /* hover                              */
+  --signal-500: #E4D789;  /* Signal Gold — primary accent       */
+  --signal-400: #EEE3A2;  /* hover-on-dark / focus glow         */
+  --signal-300: #F3EBBC;  /* tint text on dark                  */
+  --signal-tint: rgba(228, 215, 137, 0.14); /* wash             */
+
+  /* --- Classified stamp red (used VERY sparingly) ------------ */
+  --stamp-red: #E0322C;
+  --stamp-red-tint: rgba(224, 50, 44, 0.14);
+
+  /* --- Semantic status (tactical, muted) --------------------- */
+  --ok-500: #3DAE6B;      /* operational / success              */
+  --ok-tint: rgba(61, 174, 107, 0.14);
+  --warn-500: #E0A52C;    /* caution                            */
+  --warn-tint: rgba(224, 165, 44, 0.14);
+  --alert-500: #E0322C;   /* danger / critical                  */
+  --alert-tint: rgba(224, 50, 44, 0.14);
+  --info-500: #4C8DD6;    /* intel / informational              */
+  --info-tint: rgba(76, 141, 214, 0.14);
+
+  /* ============================================================
+     SEMANTIC ALIASES — reference THESE in components.
+     Default theme is DARK (the brand's native mode).
+     ============================================================ */
+
+  /* Surfaces */
+  --surface-canvas: var(--ink-900);
+  --surface-sunken: var(--ink-850);
+  --surface-card:   var(--ink-800);
+  --surface-raised: var(--ink-700);
+  --surface-inset:  var(--ink-850);
+  --surface-invert: var(--bone-100);
+
+  /* Text */
+  --text-primary:   var(--bone-100);
+  --text-secondary: var(--ink-200);
+  --text-muted:     var(--ink-300);
+  --text-faint:     var(--ink-400);
+  --text-invert:    var(--ink-900);
+  --text-accent:    var(--signal-500);
+  --text-on-signal: var(--ink-900);
+
+  /* Borders */
+  --border-subtle:  var(--ink-600);
+  --border-default: var(--ink-500);
+  --border-strong:  var(--ink-400);
+  --border-accent:  var(--signal-500);
+  --hairline:       rgba(255, 255, 255, 0.08);
+
+  /* Accent roles */
+  --accent:         var(--signal-500);
+  --accent-hover:   var(--signal-400);
+  --accent-press:   var(--signal-700);
+  --accent-wash:    var(--signal-tint);
+
+  /* Focus ring */
+  --focus-ring: var(--signal-400);
+
+  /* Redaction (solid bar that hides "concealed" content) */
+  --redact: var(--ink-900);
+  --redact-on-light: #0B0B0D;
+}
+
+/* ============================================================
+   LIGHT / "DECLASSIFIED" SCOPE
+   Inverse mode for printed dossiers, light decks, docs.
+   Apply with: <div class="declassified"> … </div>
+   ============================================================ */
+.declassified {
+  --surface-canvas: var(--bone-100);
+  --surface-sunken: var(--bone-200);
+  --surface-card:   var(--bone-000);
+  --surface-raised: var(--bone-000);
+  --surface-inset:  var(--bone-200);
+  --surface-invert: var(--ink-900);
+
+  --text-primary:   var(--ink-900);
+  --text-secondary: #3A3A40;
+  --text-muted:     #6A6A72;
+  --text-faint:     #9A9A9E;
+  --text-invert:    var(--bone-100);
+  --text-on-signal: var(--ink-900);
+
+  --border-subtle:  var(--bone-300);
+  --border-default: #C2BEB2;
+  --border-strong:  #A6A296;
+  --hairline:       rgba(8, 8, 10, 0.10);
+
+  background: var(--surface-canvas);
+  color: var(--text-primary);
+}

@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../api.js';
+import AuthShell from '../components/AuthShell.jsx';
+import Icon from '../components/Icon.jsx';
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
@@ -11,18 +13,19 @@ export default function ForgotPassword() {
     setDone(true);
   };
   return (
-    <div className="card auth-card">
-      <h1>Reset password</h1>
+    <AuthShell>
+      <span className="eyebrow eyebrow--signal eyebrow-dot">Recover access</span>
+      <h2 className="auth-card__title">Reset password</h2>
       {done ? (
-        <p className="ok">If that email exists, a reset link has been sent.</p>
+        <p className="form-msg form-msg--ok">If that email exists, a reset link has been sent.</p>
       ) : (
-        <form onSubmit={submit}>
-          <label>Email</label>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoFocus />
-          <button className="mt" type="submit">Send reset link</button>
+        <form className="field-stack" onSubmit={submit} noValidate>
+          <label className="field"><span className="field__label">Email</span>
+            <input className="field__input" type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoFocus /></label>
+          <button className="btn btn--signal btn--block btn--lg" type="submit">Send reset link <Icon name="arrow-right" /></button>
         </form>
       )}
-      <div className="mt small"><Link to="/login">Back to sign in</Link></div>
-    </div>
+      <p className="auth-foot"><Link className="link" to="/login">Back to sign in</Link></p>
+    </AuthShell>
   );
 }

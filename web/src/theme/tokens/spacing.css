@@ -1,0 +1,70 @@
+/* ============================================================
+   8genC — SPACING, RADII, BORDERS, SHADOWS, MOTION, LAYOUT
+   Tactical & precise: a 4px base grid, near-sharp corners,
+   hairline borders, and restrained elevation. On the dark
+   canvas, "depth" comes from lighter panels + the Signal glow,
+   not heavy drop shadows.
+   ============================================================ */
+
+:root {
+  /* ---- Spacing (4px base grid) ---------------------------- */
+  --space-0:  0;
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-7:  32px;
+  --space-8:  40px;
+  --space-9:  48px;
+  --space-10: 64px;
+  --space-11: 80px;
+  --space-12: 96px;
+  --space-13: 128px;
+  --space-14: 160px;
+
+  /* ---- Radii (near-sharp, tactical) ----------------------- */
+  --radius-0:    0px;
+  --radius-xs:   2px;   /* default for chips, inputs, buttons  */
+  --radius-sm:   4px;   /* cards, panels                       */
+  --radius-md:   6px;
+  --radius-lg:   10px;
+  --radius-pill: 999px; /* status dots only — used rarely      */
+
+  /* ---- Border widths -------------------------------------- */
+  --border-hair: 1px;
+  --border-bold: 2px;
+
+  /* ---- Shadows / elevation -------------------------------- */
+  --shadow-none: none;
+  --shadow-sm:  0 1px 2px rgba(0,0,0,0.40);
+  --shadow-md:  0 8px 24px -8px rgba(0,0,0,0.60);
+  --shadow-lg:  0 24px 60px -16px rgba(0,0,0,0.70);
+  /* Signal glow — focus / active accent on dark */
+  --glow-signal: 0 0 0 1px var(--signal-500), 0 0 24px -4px rgba(228,215,137,0.45);
+  --ring-focus:  0 0 0 2px var(--surface-canvas), 0 0 0 4px var(--focus-ring);
+
+  /* ---- Motion --------------------------------------------- */
+  --ease-out:   cubic-bezier(0.16, 1, 0.30, 1);   /* @kind other */
+  --ease-in-out:cubic-bezier(0.65, 0, 0.35, 1);   /* @kind other */
+  --ease-snap:  cubic-bezier(0.22, 1.2, 0.36, 1); /* @kind other */
+  --dur-1: 90ms;  /* @kind other */
+  --dur-2: 160ms; /* @kind other */
+  --dur-3: 240ms; /* @kind other */
+  --dur-4: 400ms; /* @kind other */
+
+  /* ---- Layout --------------------------------------------- */
+  --container-max: 1200px;
+  --container-wide: 1400px;
+  --gutter: var(--space-6);
+  --section-y: var(--space-13);
+
+  /* ---- Z-index -------------------------------------------- */
+  --z-base: 0;       /* @kind other */
+  --z-raised: 10;    /* @kind other */
+  --z-sticky: 100;   /* @kind other */
+  --z-overlay: 1000; /* @kind other */
+  --z-modal: 1100;   /* @kind other */
+  --z-toast: 1200;   /* @kind other */
+}

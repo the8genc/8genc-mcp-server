@@ -1,0 +1,109 @@
+/* ============================================================
+   8genC — TYPOGRAPHY
+   Two families do all the work:
+     • Display / UI : Archivo  (wide industrial grotesque)
+     • Mono / dossier: JetBrains Mono (codes, eyebrows, meta)
+   Display headlines run TIGHT + UPPERCASE for the "operative
+   briefing" feel. Mono eyebrows run WIDE + UPPERCASE.
+   ============================================================ */
+
+:root {
+  /* Families */
+  --font-display: 'Archivo', 'Arial Narrow', system-ui, sans-serif;
+  --font-sans:    'Archivo', system-ui, -apple-system, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  /* Weights */
+  --fw-regular: 400; /* @kind font */
+  --fw-medium:  500; /* @kind font */
+  --fw-semibold:600; /* @kind font */
+  --fw-bold:    700; /* @kind font */
+  --fw-heavy:   800; /* @kind font */
+  --fw-black:   900; /* @kind font */
+
+  /* ---- Type scale (px on a 1rem=16px base) ---------------- */
+  --fs-3xs: 10px;
+  --fs-2xs: 11px;
+  --fs-xs:  12px;
+  --fs-sm:  14px;
+  --fs-md:  16px;   /* body base */
+  --fs-lg:  18px;
+  --fs-xl:  22px;
+  --fs-2xl: 28px;
+  --fs-3xl: 36px;
+  --fs-4xl: 48px;
+  --fs-5xl: 64px;
+  --fs-6xl: 84px;
+  --fs-7xl: 112px;
+
+  /* Line heights */
+  --lh-tight:   1.02; /* @kind other */
+  --lh-snug:    1.14; /* @kind other */
+  --lh-heading: 1.08; /* @kind other */
+  --lh-body:    1.6;  /* @kind other */
+  --lh-relaxed: 1.75; /* @kind other */
+
+  /* Letter spacing */
+  --ls-tightest: -0.03em; /* @kind other */
+  --ls-tight:    -0.015em; /* @kind other */
+  --ls-normal:   0em;      /* @kind other */
+  --ls-wide:     0.08em;   /* @kind other */
+  --ls-wider:    0.16em;   /* @kind other */
+  --ls-widest:   0.28em;   /* @kind other */ /* mono eyebrows / stamps */
+
+  /* ---- Semantic roles ------------------------------------- */
+  /* Display (hero / section titles) — uppercase, heavy, tight */
+  --display-family: var(--font-display);
+  --display-weight: var(--fw-black);
+  --display-spacing: var(--ls-tight);
+  --display-leading: var(--lh-tight);
+
+  /* Eyebrow / kicker (mono, wide, uppercase) */
+  --eyebrow-family: var(--font-mono);
+  --eyebrow-weight: var(--fw-medium);
+  --eyebrow-size:   var(--fs-xs);
+  --eyebrow-spacing: var(--ls-widest);
+
+  /* Body */
+  --body-family: var(--font-sans);
+  --body-size:   var(--fs-md);
+  --body-leading: var(--lh-body);
+
+  /* Code / data */
+  --mono-family: var(--font-mono);
+}
+
+/* ------------------------------------------------------------
+   Optional utility classes — handy in cards & static HTML.
+   Components style themselves via the tokens above.
+   ------------------------------------------------------------ */
+.t-display {
+  font-family: var(--font-display);
+  font-weight: var(--fw-black);
+  letter-spacing: var(--ls-tight);
+  line-height: var(--lh-tight);
+  text-transform: uppercase;
+}
+.t-title {
+  font-family: var(--font-display);
+  font-weight: var(--fw-heavy);
+  letter-spacing: var(--ls-tight);
+  line-height: var(--lh-heading);
+}
+.t-eyebrow {
+  font-family: var(--font-mono);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-xs);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+}
+.t-body {
+  font-family: var(--font-sans);
+  font-size: var(--fs-md);
+  line-height: var(--lh-body);
+  font-weight: var(--fw-regular);
+}
+.t-mono {
+  font-family: var(--font-mono);
+  font-weight: var(--fw-regular);
+}

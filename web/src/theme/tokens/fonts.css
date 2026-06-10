@@ -1,0 +1,14 @@
+/* ============================================================
+   8genC — FONTS
+   The 8genC wordmark is a heavy, squared, industrial display
+   face. We can't ship the proprietary logo font, so headlines
+   use ARCHIVO (a wide, confident grotesque — heavy weights
+   read close to the wordmark) and all tactical/dossier labels,
+   codes and metadata use JETBRAINS MONO.
+   --> SUBSTITUTION FLAGGED to the user in readme.md.
+
+   Loaded from Google Fonts so consumers/cards render offline-
+   tolerant. Each card/kit HTML also <link>s these directly.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap');

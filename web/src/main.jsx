@@ -1,7 +1,9 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import './styles.css';
+import './theme/styles.css';
+import './theme/site.css';
+import './theme/portal.css';
 
 import { AuthProvider } from './auth/AuthContext.jsx';
 import { RequireAuth, RequireAdmin } from './components/guards.jsx';
@@ -35,7 +37,7 @@ createRoot(document.getElementById('root')).render(
           <Route path="/reset-password" element={<ResetPassword />} />
 
           {/* Authenticated */}
-          <Route path="/change-password" element={<RequireAuth><Layout><ChangePassword /></Layout></RequireAuth>} />
+          <Route path="/change-password" element={<RequireAuth><ChangePassword /></RequireAuth>} />
           <Route path="/" element={<RequireAuth>{withLayout(<Dashboard />)}</RequireAuth>} />
           <Route path="/tokens" element={<RequireAuth>{withLayout(<Tokens />)}</RequireAuth>} />
           <Route path="/profile" element={<RequireAuth>{withLayout(<Profile />)}</RequireAuth>} />

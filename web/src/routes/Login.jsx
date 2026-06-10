@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext.jsx';
 import { api } from '../api.js';
+import AuthShell from '../components/AuthShell.jsx';
+import Icon from '../components/Icon.jsx';
 
 export default function Login() {
   const { login } = useAuth();
@@ -20,7 +22,6 @@ export default function Login() {
     else if (params.get('error')) setErr('Social sign-in failed. Please try again.');
   }, [params]);
 
-  // After login, resume an OAuth authorize flow if a ticket is present.
   const afterAuth = (mustChange) => {
     if (mustChange) return nav('/change-password', { replace: true });
     if (ticket) return nav(`/authorize?ticket=${encodeURIComponent(ticket)}`, { replace: true });
@@ -41,30 +42,34 @@ export default function Login() {
   const socialHref = (p) => `/access/api/oauth/${p}/start${ticket ? `?ticket=${encodeURIComponent(ticket)}` : ''}`;
 
   return (
-    <div className="card auth-card">
-      <h1>Sign in</h1>
-      <p className="muted small">{ticket ? 'Sign in to authorize the MCP client' : '8genC MCP access portal'}</p>
+    <AuthShell>
+      <span className="eyebrow eyebrow--signal eyebrow-dot">Secure sign-in</span>
+      <h2 className="auth-card__title">Access terminal</h2>
+      <p className="auth-card__sub">{ticket ? 'Sign in to authorize the MCP client.' : 'Sign in to manage tokens and connect your agents.'}</p>
+
+      <form className="field-stack" onSubmit={submit} noValidate>
+        <label className="field"><span className="field__label">Username or email</span>
+          <input className="field__input" value={identifier} onChange={(e) => setId(e.target.value)} autoFocus autoComplete="username" /></label>
+        <label className="field"><span className="field__label">Password</span>
+          <input className="field__input" type="password" value={password} onChange={(e) => setPw(e.target.value)} autoComplete="current-password" /></label>
+        <div className="field-row"><span /><Link className="link mono field-row__link" to="/forgot-password">Forgot?</Link></div>
+        {err && <div className="form-msg form-msg--err">{err}</div>}
+        <button className="btn btn--signal btn--block btn--lg" type="submit" disabled={busy}>
+          {busy ? 'Signing in…' : 'Sign in'} <Icon name="arrow-right" />
+        </button>
+      </form>
 
       {(providers.google || providers.github) && (
-        <div className="mt">
-          {providers.google && <a href={socialHref('google')}><button className="secondary" style={{ width: '100%', marginBottom: 8 }}>Continue with Google</button></a>}
-          {providers.github && <a href={socialHref('github')}><button className="secondary" style={{ width: '100%' }}>Continue with GitHub</button></a>}
-          <p className="muted small" style={{ textAlign: 'center', margin: '14px 0 0' }}>or</p>
-        </div>
+        <>
+          <div className="auth-or"><span>or continue with</span></div>
+          <div className="social-row">
+            {providers.google && <a className="btn btn--ghost social-btn" href={socialHref('google')}><span className="social-g">G</span> Google</a>}
+            {providers.github && <a className="btn btn--ghost social-btn" href={socialHref('github')}><Icon name="github" size={16} /> GitHub</a>}
+          </div>
+        </>
       )}
 
-      <form onSubmit={submit}>
-        <label>Username or email</label>
-        <input value={identifier} onChange={(e) => setId(e.target.value)} autoFocus autoComplete="username" />
-        <label>Password</label>
-        <input type="password" value={password} onChange={(e) => setPw(e.target.value)} autoComplete="current-password" />
-        {err && <div className="err">{err}</div>}
-        <button className="mt" disabled={busy} type="submit">{busy ? 'Signing in…' : 'Sign in'}</button>
-      </form>
-      <div className="row mt small spread">
-        <Link to={`/register${ticket ? `?ticket=${encodeURIComponent(ticket)}` : ''}`}>Create account</Link>
-        <Link to="/forgot-password">Forgot password?</Link>
-      </div>
-    </div>
+      <p className="auth-foot">No clearance yet? <Link className="link" to={`/register${ticket ? `?ticket=${encodeURIComponent(ticket)}` : ''}`}>Request access</Link></p>
+    </AuthShell>
   );
 }

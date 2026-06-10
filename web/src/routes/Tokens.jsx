@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api.js';
+import Icon from '../components/Icon.jsx';
 
 export default function Tokens() {
   const [tokens, setTokens] = useState([]);
   const [name, setName] = useState('');
   const [created, setCreated] = useState(null); // { token } shown once
+  const [showForm, setShowForm] = useState(false);
   const [err, setErr] = useState('');
+  const [copied, setCopied] = useState(false);
 
   const load = () => api.get('/tokens').then((r) => setTokens(r.tokens)).catch(() => {});
   useEffect(() => { load(); }, []);
@@ -15,49 +18,62 @@ export default function Tokens() {
     setErr('');
     try {
       const res = await api.post('/tokens', { name: name || 'token' });
-      setCreated(res);
-      setName('');
-      load();
+      setCreated(res); setName(''); setShowForm(false); load();
     } catch (e2) { setErr(e2.message || 'Could not create token'); }
   };
 
   const revoke = async (id) => {
     if (!confirm('Revoke this token? Clients using it will lose access.')) return;
-    await api.del(`/tokens/${id}`);
-    load();
+    await api.del(`/tokens/${id}`); load();
+  };
+
+  const copyToken = () => {
+    navigator.clipboard?.writeText(created.token).then(() => { setCopied(true); setTimeout(() => setCopied(false), 1600); });
   };
 
   return (
     <>
-      <div className="card">
-        <h1>Personal access tokens</h1>
-        <p className="muted small">Use a token as a <code>Bearer</code> credential in your MCP client config.</p>
-        <form onSubmit={create} className="row mt">
-          <input placeholder="Token name (e.g. laptop)" value={name} onChange={(e) => setName(e.target.value)} style={{ maxWidth: 280 }} />
-          <button type="submit">Create token</button>
-        </form>
-        {err && <div className="err">{err}</div>}
-        {created && (
-          <div className="card mt">
-            <p className="ok">Copy this token now — it won't be shown again.</p>
-            <pre>{created.token}</pre>
-          </div>
-        )}
+      <div className="portal__head">
+        <div><h1 className="portal__name">Personal access tokens</h1><p className="portal__email mono">Bearer credentials for your MCP client</p></div>
+        {!showForm && <button className="btn btn--signal" onClick={() => setShowForm(true)}><Icon name="plus" size={15} /> New token</button>}
       </div>
 
-      <div className="card">
-        <h2>Your tokens</h2>
-        {tokens.length === 0 ? <p className="muted">No tokens yet.</p> : (
-          <table>
+      <div className="panel-block">
+        {created && (
+          <div className="token-reveal">
+            <div className="token-reveal__head"><Icon name="check-circle-2" size={16} /> Token created — copy it now, you won't see it again.</div>
+            <div className="token-reveal__row">
+              <code className="token-reveal__code">{created.token}</code>
+              <button className="copy-btn" onClick={copyToken}><Icon name="copy" size={14} /><span>{copied ? 'Copied' : 'Copy'}</span></button>
+            </div>
+          </div>
+        )}
+
+        {showForm && (
+          <form className="token-form" onSubmit={create}>
+            <label className="field"><span className="field__label">Token name</span>
+              <input className="field__input" value={name} onChange={(e) => setName(e.target.value)} placeholder="cursor-laptop" autoFocus /></label>
+            <div className="token-form__actions">
+              <button className="btn btn--signal" type="submit">Generate token</button>
+              <button className="btn btn--ghost" type="button" onClick={() => { setShowForm(false); setName(''); }}>Cancel</button>
+            </div>
+          </form>
+        )}
+        {err && <div className="form-msg form-msg--err">{err}</div>}
+
+        {tokens.length === 0 ? (
+          <p className="token-empty mono">No tokens yet. Create one to connect a client.</p>
+        ) : (
+          <table className="token-table">
             <thead><tr><th>Name</th><th>Created</th><th>Last used</th><th>Status</th><th></th></tr></thead>
             <tbody>
               {tokens.map((t) => (
                 <tr key={t.id}>
-                  <td>{t.name}</td>
-                  <td className="muted">{new Date(t.created_at).toLocaleDateString()}</td>
-                  <td className="muted">{t.last_used_at ? new Date(t.last_used_at).toLocaleString() : '—'}</td>
-                  <td>{t.revoked_at ? <span className="badge blocked">revoked</span> : <span className="badge approved">active</span>}</td>
-                  <td>{!t.revoked_at && <button className="ghost danger" onClick={() => revoke(t.id)}>Revoke</button>}</td>
+                  <td className="tk-name">{t.name}</td>
+                  <td className="mono tk-date">{new Date(t.created_at).toLocaleDateString()}</td>
+                  <td className="mono tk-date">{t.last_used_at ? new Date(t.last_used_at).toLocaleDateString() : '—'}</td>
+                  <td>{t.revoked_at ? <span className="chip chip--alert">revoked</span> : <span className="chip chip--ok">active</span>}</td>
+                  <td>{!t.revoked_at && <button className="iconbtn iconbtn--danger" onClick={() => revoke(t.id)}><Icon name="trash-2" size={14} /></button>}</td>
                 </tr>
               ))}
             </tbody>
