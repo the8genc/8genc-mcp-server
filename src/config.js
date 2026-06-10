@@ -73,15 +73,17 @@ export const config = {
     smtpUrl: process.env.SMTP_URL || null
   },
 
+  // Where admin-facing notifications (e.g. new-signup-pending-approval) are sent.
+  adminNotifyEmail: process.env.ADMIN_NOTIFY_EMAIL || 'arif@8genc.com',
+
   mcpScope: 'mcp:tools',
   patPrefix: '8genc_pat_',
 
   // Default access tier applied to a skill when it's first synced into the
-  // catalog (and the fallback tier for a slug not yet in the catalog). 'consultant'
-  // means newly-synced skills are visible to consultants + admins by default;
-  // clients still need an explicit allow override. Set to 'admin' for
-  // safe-by-default (every new skill hidden until an admin classifies it).
-  rbacDefaultTier: process.env.RBAC_DEFAULT_TIER || 'consultant'
+  // catalog (and the fallback tier for a slug not yet in the catalog). 'admin'
+  // is safe-by-default: every newly-synced skill is admin-only until an admin
+  // classifies it down to 'consultant'/'client' in the dashboard.
+  rbacDefaultTier: process.env.RBAC_DEFAULT_TIER || 'admin'
 };
 
 export function resourceUrl() {

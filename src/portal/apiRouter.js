@@ -72,6 +72,12 @@ export function createPortalApiRouter({ oauth = null, skills = null } = {}) {
     }
 
     await issueEmailToken(user, 'verify', 'Verify your 8genC account', '/verify-email');
+    // Notify the admin inbox that a new account is awaiting approval.
+    queueEmail({
+      to: config.adminNotifyEmail,
+      subject: `New 8genC signup pending approval: ${username}`,
+      text: `A new account has registered and is pending admin approval.\n\nUsername: ${username}\nEmail: ${email}\n\nReview & approve: ${portalLink('/admin/users')}\n`
+    });
     return ok(res, { user: users.publicUser(user), message: 'Registered. Check email to verify; an admin must approve your account before MCP access.' });
   });
 
