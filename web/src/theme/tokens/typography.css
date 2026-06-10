@@ -66,10 +66,10 @@
   --eyebrow-size:   var(--fs-xs);
   --eyebrow-spacing: var(--ls-widest);
 
-  /* Body — typewriter (Bulletin Typewriter MN) for the dossier feel */
-  --body-family: var(--font-mono);
+  /* Body — clean sans for readability; labels/eyebrows/codes stay typewriter (--font-mono) */
+  --body-family: var(--font-sans);
   --body-size:   var(--fs-md);
-  --body-leading: var(--lh-relaxed);
+  --body-leading: var(--lh-body);
 
   /* Code / data */
   --mono-family: var(--font-mono);
@@ -102,7 +102,7 @@
 .t-body {
   font-family: var(--body-family);
   font-size: var(--fs-md);
-  line-height: var(--lh-relaxed);
+  line-height: var(--lh-body);
   font-weight: var(--fw-regular);
 }
 .t-mono {
