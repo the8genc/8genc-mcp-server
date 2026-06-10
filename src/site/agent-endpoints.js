@@ -23,7 +23,10 @@ const TOOLS = [
   { name: 'skill_get', description: "Get a skill's full SKILL.md body" },
   { name: 'skill_get_reference', description: 'Get a single reference file for a skill' },
   { name: 'skill_search', description: 'Find the right skill for a task (semantic search)' },
-  { name: 'skill_sync', description: 'Mirror skills from GitHub into ZeroDB' }
+  { name: 'skill_sync', description: 'Mirror skills from GitHub into ZeroDB' },
+  { name: 'orchestration_manifests', description: 'Machine-readable skill handoff graph (consumes/produces/tools/gates)' },
+  { name: 'orchestration_plan', description: 'Resolve accessible skills into parallel/dependent execution levels' },
+  { name: 'orchestration_guide', description: 'Orchestration spec + how to run it in your authenticated context' }
 ];
 
 export function mountAgentEndpoints(app, { serverName = '8genC MCP', version = '0.0.0' } = {}) {
@@ -48,7 +51,7 @@ export function mountAgentEndpoints(app, { serverName = '8genC MCP', version = '
 - Tool & capability catalog: ${BASE}/tools
 - Request access (admin-gated): ${BASE}/access
 
-## Tools (8)
+## Tools (${TOOLS.length})
 ${TOOLS.map((t) => `- ${t.name} — ${t.description}`).join('\n')}
 
 ## Status

@@ -93,12 +93,21 @@ describe('Tool Definitions', () => {
     }
   });
 
-  it('all 8 tools have unique names', async () => {
+  it('orchestration tools have correct schemas', async () => {
+    const { ORCHESTRATION_TOOLS } = await import('../src/tools/orchestration-tools.js');
+    assert.equal(ORCHESTRATION_TOOLS.length, 3);
+    assert.deepEqual(
+      ORCHESTRATION_TOOLS.map((t) => t.name),
+      ['orchestration_manifests', 'orchestration_plan', 'orchestration_guide']
+    );
+  });
+
+  it('all 11 tools have unique names', async () => {
     const { ALL_TOOLS } = await import('../src/server.js');
-    assert.equal(ALL_TOOLS.length, 8);
+    assert.equal(ALL_TOOLS.length, 11); // 3 platform + 5 skill + 3 orchestration
 
     const names = ALL_TOOLS.map(t => t.name);
-    assert.equal(new Set(names).size, 8, 'Duplicate tool names found');
+    assert.equal(new Set(names).size, 11, 'Duplicate tool names found');
   });
 });
 

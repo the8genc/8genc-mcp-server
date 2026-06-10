@@ -16,6 +16,7 @@
  */
 
 import axios from 'axios';
+import YAML from 'yaml';
 
 const GITHUB_API = 'https://api.github.com';
 const GITHUB_RAW = 'https://raw.githubusercontent.com';
@@ -101,12 +102,15 @@ export class SkillsClient {
     for (const f of skillFiles) {
       const slug = f.path.split('/')[1];
       let meta = {};
+      let manifest = null;
       try {
         const content = await this.getRaw(f.path);
         meta = parseFrontmatter(content);
+        manifest = parseManifest(content);
       } catch {
         // If a single SKILL.md fails, still surface the skill by slug.
       }
+      if (manifest && !manifest.id) manifest.id = slug;
       const references = tree
         .filter(
           (t) => t.type === 'blob' && t.path.startsWith(`skills/${slug}/references/`)
@@ -118,12 +122,25 @@ export class SkillsClient {
         slug,
         description: (meta.description || '').trim(),
         path: f.path,
-        references
+        references,
+        manifest // null unless the SKILL.md frontmatter carries a manifest: block
       });
     }
 
     this._listCache = { at: Date.now(), skills };
     return skills;
+  }
+
+  /**
+   * Orchestration manifests for every skill that declares one (frontmatter
+   * `manifest:` block). Each is { id, slug, name, consumes, produces, tools,
+   * humanGates } — the machine-readable handoff graph the planner runs on.
+   */
+  async listManifests({ refresh = false } = {}) {
+    const skills = await this.listSkills({ refresh });
+    return skills
+      .filter((s) => s.manifest)
+      .map((s) => ({ ...s.manifest, id: s.manifest.id || s.slug, slug: s.slug, name: s.name }));
   }
 
   /**
@@ -145,6 +162,8 @@ export class SkillsClient {
     const raw = await this.getRaw(match.path);
     const meta = parseFrontmatter(raw);
     const body = stripFrontmatter(raw);
+    const manifest = parseManifest(raw);
+    if (manifest && !manifest.id) manifest.id = match.slug;
 
     const result = {
       name: meta.name || match.slug,
@@ -152,6 +171,7 @@ export class SkillsClient {
       description: (meta.description || '').trim(),
       path: match.path,
       frontmatter: meta,
+      manifest, // null unless the SKILL.md carries a manifest: block
       content: raw,
       body,
       references: match.references,
@@ -314,4 +334,39 @@ export function parseFrontmatter(md) {
 export function stripFrontmatter(md) {
   const m = md.match(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/);
   return m ? md.slice(m[0].length).trimStart() : md;
+}
+
+/**
+ * Parse the orchestration `manifest:` block from a SKILL.md's YAML frontmatter
+ * into the normalized shape the planner uses (mirrors the skills repo's
+ * orchestrator/src/manifests/loader.ts). Returns null when there's no manifest.
+ *   { id, consumes: [{artifact, required}], produces: [], tools: [], humanGates: [] }
+ */
+export function parseManifest(md) {
+  if (!md) return null;
+  const m = md.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  if (!m) return null;
+  let fm;
+  try {
+    fm = YAML.parse(m[1]);
+  } catch {
+    return null;
+  }
+  const raw = fm && fm.manifest;
+  if (!raw || typeof raw !== 'object') return null;
+
+  const consumes = Array.isArray(raw.consumes)
+    ? raw.consumes
+        .filter((c) => c && typeof c.artifact === 'string')
+        .map((c) => ({ artifact: c.artifact, required: Boolean(c.required) }))
+    : [];
+  const strList = (v) => (Array.isArray(v) ? v.filter((x) => typeof x === 'string') : []);
+
+  return {
+    id: typeof raw.id === 'string' ? raw.id : fm.name || null,
+    consumes,
+    produces: strList(raw.produces),
+    tools: strList(raw.tools),
+    humanGates: strList(raw.human_gates)
+  };
 }

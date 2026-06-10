@@ -66,6 +66,7 @@
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^8.0.10",
     "pg": "^8.13.1",
+    "yaml": "^2.9.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {

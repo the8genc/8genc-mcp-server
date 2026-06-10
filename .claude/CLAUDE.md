@@ -3,7 +3,7 @@
 This MCP server provides AINative platform discovery and a GitHub-backed Agent Skills library.
 PRD generation is delivered as the `prd-generator` Agent Skill (see below), not as server tools.
 
-## Available Tools (8)
+## Available Tools (11)
 
 ### Platform Discovery
 | Tool | Description |
@@ -20,6 +20,18 @@ PRD generation is delivered as the `prd-generator` Agent Skill (see below), not 
 | `skill_get_reference` | Get a single reference file for a skill, on demand |
 | `skill_search` | Find the right skill for a task (ZeroDB semantic search, GitHub keyword fallback) |
 | `skill_sync` | Mirror skills from GitHub into ZeroDB for semantic search + offline use |
+
+### Orchestration (parallel + dependent execution)
+| Tool | Description |
+|------|-------------|
+| `orchestration_manifests` | Handoff manifests (consumes/produces/tools/gates) for the caller's accessible skills |
+| `orchestration_plan` | Resolve the manifests into parallel levels + per-node dependency contracts (optionally by `include`/`goals`) |
+| `orchestration_guide` | Orchestration spec + how to run it (in-harness or the standalone runtime) |
+
+Skills declare a `manifest:` block in SKILL.md frontmatter; `consumes`/`produces`
+across skills form the dependency DAG, which the planner topo-sorts into parallel
+levels. Orchestration tools are **RBAC-scoped** — the plan only spans skills the
+caller's role/overrides allow.
 
 Skills are also exposed as **MCP prompts** — each skill in the repo appears as a
 selectable prompt (name = skill slug) whose body is the `SKILL.md`. An optional

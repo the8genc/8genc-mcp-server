@@ -83,7 +83,7 @@ Add to your Claude Code, Cursor, or Windsurf MCP config:
 }
 ```
 
-## Tools (8)
+## Tools (11)
 
 ### Platform Discovery (3 tools)
 
@@ -108,6 +108,23 @@ Add to your Claude Code, Cursor, or Windsurf MCP config:
 Skills are also exposed as **MCP prompts**: every skill in the repo shows up as a
 selectable prompt (name = its slug), with an optional `input` argument for the task
 to apply it to.
+
+### Orchestration — parallel + dependent agent execution (3 tools)
+
+Skills carry a machine-readable `manifest:` block (`consumes`/`produces` artifacts,
+`tools`, `human_gates`). Those handoffs form a dependency graph; the planner resolves
+it into **parallel levels** so independent skills run concurrently and dependent ones
+in order. These tools expose that planning over MCP — **scoped to the skills the
+caller can access** (RBAC), so each user only orchestrates their allowed set.
+
+| Tool | Description |
+|------|-------------|
+| `orchestration_manifests` | List the handoff manifests for your accessible skills (the dependency graph). |
+| `orchestration_plan` | Resolve the DAG into parallel levels + per-node inputs/outputs/gates. Target a subset by `include` skill ids or `goals` artifacts. |
+| `orchestration_guide` | The orchestration spec + how to run it in your context (in-harness, or the standalone runtime). |
+
+The server plans and hands back contracts; execution happens in the caller's harness
+(each level run concurrently) or the skills repo's standalone orchestrator runtime.
 
 **Source of truth is the GitHub repo** (`SKILLS_REPO`, default
 [`the8genc/ai-8gent-skills`](https://github.com/the8genc/ai-8gent-skills)) laid out

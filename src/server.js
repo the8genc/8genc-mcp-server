@@ -19,6 +19,7 @@ import {
 
 import { PLATFORM_TOOLS, executePlatformTool } from './tools/platform-tools.js';
 import { SKILL_TOOLS, executeSkillTool } from './tools/skill-tools.js';
+import { ORCHESTRATION_TOOLS, executeOrchestrationTool } from './tools/orchestration-tools.js';
 import {
   resolveUser,
   isAdmin,
@@ -38,7 +39,8 @@ import { syncCatalog } from './skills/catalogSync.js';
 // keeps only platform discovery + skills delivery.
 export const ALL_TOOLS = [
   ...PLATFORM_TOOLS,
-  ...SKILL_TOOLS
+  ...SKILL_TOOLS,
+  ...ORCHESTRATION_TOOLS
 ];
 
 // Map each non-skill tool name to its executor. Platform tools take (name, args, client);
@@ -47,6 +49,7 @@ const PLATFORM_EXECUTORS = {};
 for (const t of PLATFORM_TOOLS) PLATFORM_EXECUTORS[t.name] = executePlatformTool;
 
 const SKILL_TOOL_NAMES = new Set(SKILL_TOOLS.map((t) => t.name));
+const ORCHESTRATION_TOOL_NAMES = new Set(ORCHESTRATION_TOOLS.map((t) => t.name));
 
 /**
  * @param {object} ctx
@@ -143,6 +146,11 @@ export function createMcpServer(ctx) {
             console.error(`[${serverName}] catalog sync failed: ${err.message}`);
           }
         }
+      } else if (ORCHESTRATION_TOOL_NAMES.has(name)) {
+        // Orchestration plans are scoped to the user's accessible skills.
+        const accessSet = isAdmin(user) ? null : await getAccessSet(user);
+        const isAccessible = (id) => decide(user, id, accessSet);
+        result = await executeOrchestrationTool(name, args || {}, ctx, { isAccessible });
       } else {
         const executor = PLATFORM_EXECUTORS[name];
         if (!executor) {
