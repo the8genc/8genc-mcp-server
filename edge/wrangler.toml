@@ -1,0 +1,15 @@
+name = "8genc-www-ax"
+main = "8genc-www-worker.js"
+compatibility_date = "2026-06-01"
+
+# Run this Worker on the marketing domain. The route must cover all paths so the
+# Worker can serve the agent endpoints and proxy the rest to Framer.
+routes = [
+  { pattern = "www.8genc.com/*", zone_name = "8genc.com" }
+]
+
+# Framer origin the Worker pulls page content from. MUST be a hostname Framer
+# serves this site for that is NOT itself behind this Worker (else infinite loop).
+# See README.md → "Origin setup".
+[vars]
+ORIGIN = "https://minimum-function-158626.framer.app"
