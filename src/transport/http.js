@@ -23,6 +23,7 @@ import { WebStandardStreamableHTTPServerTransport } from '@modelcontextprotocol/
 import { requireBearerAuth } from '@modelcontextprotocol/sdk/server/auth/middleware/bearerAuth.js';
 import { mountPortalStatic } from '../portal/static.js';
 import { mountMarketing } from '../site/marketing.js';
+import { mountAgentEndpoints } from '../site/agent-endpoints.js';
 import { timingMiddleware, statusHandler } from '../site/status.js';
 import { query } from '../db/pool.js';
 
@@ -88,9 +89,23 @@ export async function startHttpServer({ createServer, port, host = '0.0.0.0', se
       hsts: { maxAge: 31536000, includeSubDomains: true, preload: true }
     })
   );
+  app.set('trust proxy', 1); // Railway terminates TLS at one proxy hop
   app.use(express.json({ limit: '4mb' }));
   app.use(cookieParser());
   app.use(timingMiddleware); // records real request durations for the status strip
+
+  // Global, lenient per-IP rate limit so every response (including the static
+  // marketing site) advertises standard RateLimit-* headers. /mcp layers a
+  // stricter per-credential limit on top. Health checks are exempt.
+  app.use(
+    rateLimit({
+      windowMs: 60 * 1000,
+      max: parseInt(process.env.GLOBAL_RATE_LIMIT_PER_MIN || '6000', 10),
+      standardHeaders: true,
+      legacyHeaders: false,
+      skip: (req) => req.path === '/health'
+    })
+  );
 
   // OAuth authorization-server endpoints + RFC 9728 metadata (PR3).
   if (auth?.oauthRouter) app.use(auth.oauthRouter);
@@ -199,6 +214,11 @@ export async function startHttpServer({ createServer, port, host = '0.0.0.0', se
     })
   );
 
+  // Agent Experience (AX) discovery endpoints — llms.txt, robots.txt,
+  // sitemap.xml, openapi.json, /.well-known/{ai-plugin,mcp}.json. Mounted
+  // before the static site so they win and serve correct Content-Types.
+  mountAgentEndpoints(app, { serverName, version });
+
   // Static React portal at /access (SPA fallback scoped to /access/* — mounted
   // after /mcp and the well-known/API routes so it cannot shadow them).
   mountPortalStatic(app);
@@ -217,6 +237,28 @@ export async function startHttpServer({ createServer, port, host = '0.0.0.0', se
     });
   app.get('/mcp', methodNotAllowed);
   app.delete('/mcp', methodNotAllowed);
+
+  // Terminal 404 — machine-readable JSON for agents/APIs, minimal HTML for
+  // browsers. Offer order ['json','html'] means Accept: */* (crawlers, curl,
+  // most agents) resolves to JSON, while a browser's explicit text/html wins
+  // HTML. Fixes the audit's "404 returns HTML error page" finding.
+  app.use((req, res) => {
+    if (res.headersSent) return;
+    if (req.accepts(['json', 'html']) === 'html') {
+      res.status(404).type('html').send(
+        '<!doctype html><meta charset="utf-8"><title>404 — Not found · 8genC MCP</title>' +
+        '<body style="background:#000;color:#F7F7F7;font-family:system-ui,sans-serif;display:grid;place-items:center;height:100vh;margin:0">' +
+        '<main style="text-align:center"><h1 style="font-size:72px;margin:0;letter-spacing:-.04em">404</h1>' +
+        '<p style="color:#9E9E9E">Not found. <a style="color:#ECE7AE" href="/">Return to mcp.8genc.com</a></p></main>'
+      );
+    } else {
+      res.status(404).type('application/json').json({
+        error: 'not_found',
+        message: `No resource at ${req.method} ${req.path}`,
+        docs: `${process.env.PUBLIC_BASE_URL || 'https://mcp.8genc.com'}/openapi.json`
+      });
+    }
+  });
 
   // Final JSON error handler — catches thrown/async errors from the portal API
   // (and any route) so clients get JSON, never an HTML 500 with a stack trace.

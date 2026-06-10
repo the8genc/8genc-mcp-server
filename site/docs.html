@@ -21,6 +21,21 @@
 <meta name="twitter:title" content="8genC MCP · Field Manual" />
 <meta name="twitter:description" content="Connect your AI agents to the 8genC MCP server — auth, client config, and verification." />
 <meta name="twitter:image" content="https://mcp.8genc.com/assets/og-hero.png" />
+<!-- MCP discovery (Agent Experience) -->
+<link rel="mcp-server" href="https://mcp.8genc.com/mcp" />
+<meta name="mcp-server" content="https://mcp.8genc.com/mcp" />
+<link rel="alternate" type="application/json" href="https://mcp.8genc.com/.well-known/mcp.json" title="MCP manifest" />
+<!-- Structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://mcp.8genc.com/#org", "name": "8genC", "url": "https://www.8genc.com", "logo": "https://mcp.8genc.com/assets/8genc-logomark-black.png", "description": "Fractional leadership balanced with agentic execution." },
+    { "@type": "WebSite", "@id": "https://mcp.8genc.com/#website", "url": "https://mcp.8genc.com/", "name": "8genC MCP", "publisher": { "@id": "https://mcp.8genc.com/#org" } },
+    { "@type": "WebAPI", "name": "8genC MCP Server", "url": "https://mcp.8genc.com/mcp", "documentation": "https://mcp.8genc.com/docs", "termsOfService": "https://mcp.8genc.com/docs", "provider": { "@id": "https://mcp.8genc.com/#org" } }
+  ]
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="/styles.css" />
