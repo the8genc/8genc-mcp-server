@@ -23,6 +23,7 @@ import { WebStandardStreamableHTTPServerTransport } from '@modelcontextprotocol/
 import { requireBearerAuth } from '@modelcontextprotocol/sdk/server/auth/middleware/bearerAuth.js';
 import { mountPortalStatic } from '../portal/static.js';
 import { mountMarketing } from '../site/marketing.js';
+import { timingMiddleware, statusHandler } from '../site/status.js';
 import { query } from '../db/pool.js';
 
 function toWebRequest(req) {
@@ -89,6 +90,7 @@ export async function startHttpServer({ createServer, port, host = '0.0.0.0', se
   );
   app.use(express.json({ limit: '4mb' }));
   app.use(cookieParser());
+  app.use(timingMiddleware); // records real request durations for the status strip
 
   // OAuth authorization-server endpoints + RFC 9728 metadata (PR3).
   if (auth?.oauthRouter) app.use(auth.oauthRouter);
@@ -102,6 +104,10 @@ export async function startHttpServer({ createServer, port, host = '0.0.0.0', se
   // fallback used only if the static site bundle is absent.
   const landingFallback = (_req, res) =>
     res.json({ name: serverName, version, transport: 'streamable-http', endpoint: '/mcp', authenticated: !!auth?.verifier, status: 'ok' });
+
+  // Public status metrics for the marketing status strip (real tools/services counts,
+  // self-measured uptime + median latency).
+  app.get('/api/status', statusHandler);
 
   // Health check — verifies DB connectivity when auth is enabled so the platform
   // returns 503 (and Railway can react) if Postgres is unreachable.

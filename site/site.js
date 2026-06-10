@@ -70,6 +70,41 @@
     head.setAttribute("aria-expanded", open ? "true" : "false");
   });
 
+  // ---- Live status strip (real data from /api/status) ----
+  (function () {
+    var bar = document.querySelector("[data-statusbar]");
+    if (!bar) return;
+    var setNum = function (metric, value) {
+      var el = bar.querySelector('[data-metric="' + metric + '"] [data-num]');
+      if (el && value != null) el.textContent = value;
+    };
+    var setLbl = function (metric, text) {
+      var el = bar.querySelector('[data-metric="' + metric + '"] .metric__lbl');
+      if (el && text) el.textContent = text;
+    };
+    fetch("/api/status", { headers: { Accept: "application/json" } })
+      .then(function (r) { return r.json(); })
+      .then(function (s) {
+        if (s.uptime_pct != null) {
+          setNum("uptime", s.uptime_pct);
+          var d = s.uptime_window_days || 0;
+          setLbl("uptime", d >= 90 ? "90-day uptime" : ("uptime · last " + d + "d"));
+        } else {
+          setLbl("uptime", "uptime · warming up");
+        }
+        if (s.latency_ms != null) setNum("latency", s.latency_ms);
+        if (s.tools != null) setNum("tools", s.tools);
+        if (s.services != null) setNum("services", s.services);
+        if (s.status && s.status !== "operational") {
+          var chip = bar.querySelector("[data-status-chip]");
+          var label = bar.querySelector("[data-status-label]");
+          if (chip) { chip.classList.remove("chip--ok"); chip.classList.add("chip--warn"); }
+          if (label) label.textContent = "Degraded";
+        }
+      })
+      .catch(function () { /* leave fallbacks */ });
+  })();
+
   // ---- Reveal on scroll ----
   if ("IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     var io = new IntersectionObserver(function (entries) {

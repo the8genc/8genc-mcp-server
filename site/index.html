@@ -78,16 +78,16 @@
 </section>
 
 <!-- ============================ STATUS STRIP ============================ -->
-<section class="statusbar" id="status">
+<section class="statusbar" id="status" data-statusbar>
   <div class="container statusbar__inner">
     <div class="statusbar__item">
-      <span class="chip chip--ok"><span class="status-dot"></span> All systems operational</span>
+      <span class="chip chip--ok" data-status-chip><span class="status-dot"></span> <span data-status-label>All systems operational</span></span>
     </div>
     <div class="statusbar__metrics">
-      <div class="metric"><span class="metric__val">99.98<span class="metric__unit">%</span></span><span class="metric__lbl">90-day uptime</span></div>
-      <div class="metric"><span class="metric__val">38<span class="metric__unit">ms</span></span><span class="metric__lbl">Median latency</span></div>
-      <div class="metric"><span class="metric__val">8<span class="metric__unit">tools</span></span><span class="metric__lbl">Exposed over MCP</span></div>
-      <div class="metric"><span class="metric__val">22<span class="metric__unit">svc</span></span><span class="metric__lbl">Platform catalog</span></div>
+      <div class="metric" data-metric="uptime"><span class="metric__val"><span data-num>—</span><span class="metric__unit">%</span></span><span class="metric__lbl">uptime</span></div>
+      <div class="metric" data-metric="latency"><span class="metric__val"><span data-num>—</span><span class="metric__unit">ms</span></span><span class="metric__lbl">Median latency</span></div>
+      <div class="metric" data-metric="tools"><span class="metric__val"><span data-num>8</span><span class="metric__unit">tools</span></span><span class="metric__lbl">Exposed over MCP</span></div>
+      <div class="metric" data-metric="services"><span class="metric__val"><span data-num>22</span><span class="metric__unit">svc</span></span><span class="metric__lbl">Platform catalog</span></div>
     </div>
     <a class="link mono statusbar__link" href="/docs">Status feed <i data-lucide="arrow-up-right" style="width:13px;height:13px;vertical-align:-2px"></i></a>
   </div>

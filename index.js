@@ -48,6 +48,7 @@ import { startHttpServer } from './src/transport/http.js';
 import { config } from './src/config.js';
 import { closePool } from './src/db/pool.js';
 import { startCleanup } from './src/db/cleanup.js';
+import { startStatusHeartbeat } from './src/site/status.js';
 import { buildAuth } from './src/auth/buildAuth.js';
 
 // Load .env
@@ -247,6 +248,7 @@ async function main() {
     }
     await startHttpServer({ createServer, port, serverName: SERVER_NAME, version: PKG_VERSION, auth });
     if (auth) startCleanup(); // daily sweep of expired auth rows
+    if (config.authEnabled) startStatusHeartbeat(); // uptime/latency samples for /api/status
     console.error(`  MCP Server listening on http://0.0.0.0:${port}/mcp (${ALL_TOOLS.length} tools)\n`);
   } else {
     const server = createServer();
