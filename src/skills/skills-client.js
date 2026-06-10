@@ -78,6 +78,27 @@ export class SkillsClient {
       return res.data;
     } catch (err) {
       const status = err.response?.status;
+      // raw.githubusercontent doesn't reliably honor fine-grained PATs on private
+      // repos — fall back to the Contents API (raw media type), which accepts any
+      // valid token. (Without a token, a private repo simply isn't reachable.)
+      if (this.token && [401, 403, 404].includes(status)) {
+        try {
+          const apiPath = path.split('/').map(encodeURIComponent).join('/');
+          const apiUrl = `${GITHUB_API}/repos/${this.repo}/contents/${apiPath}?ref=${encodeURIComponent(this.branch)}`;
+          const res2 = await axios.get(apiUrl, {
+            headers: { ...this._apiHeaders(), Accept: 'application/vnd.github.raw' },
+            timeout: 20000,
+            responseType: 'text',
+            transformResponse: [(d) => d]
+          });
+          return res2.data;
+        } catch (err2) {
+          const s2 = err2.response?.status;
+          throw new Error(
+            `GitHub fetch failed for ${path} (raw ${status}, contents-api ${s2}): ${err2.message}`
+          );
+        }
+      }
       throw new Error(`GitHub raw fetch failed for ${path} (${status}): ${err.message}`);
     }
   }
