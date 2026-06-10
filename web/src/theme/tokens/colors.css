@@ -1,38 +1,39 @@
 /* ============================================================
    8genC — COLOR SYSTEM
-   Blackout monochrome + a single tactical Signal accent.
-   The brand operates "in the dark": near-black canvases, a
-   warm off-white for dossier text, a grayscale ladder for
-   structure, and Signal Gold (#E4D789, from 8genc.com) used
-   sparingly like a targeting marker / highlight tab.
+   Per the official 8genC brand kit: a PURE neutral grayscale
+   (#000000 · #555555 · #666666 · #D5D5D5 · #FFFFFF) plus a single
+   pale accent — Signal Sand #ECE7AE — used sparingly like a
+   highlight tab / targeting marker. The brand operates "in the
+   dark": black canvases, near-white dossier text, a true-gray
+   ladder for structure, no color cast.
    ============================================================ */
 
 :root {
-  /* --- Base ink ladder (dark → light) ------------------------ */
-  --ink-900: #000000;   /* Blackout — primary canvas (true black) */
-  --ink-850: #0E0E11;   /* Obsidian — deep panels               */
-  --ink-800: #141417;   /* Graphite — raised surface / card     */
-  --ink-700: #1C1C20;   /* Gunmetal — elevated panel            */
-  --ink-600: #26262B;   /* Steel — hairline borders, dividers   */
-  --ink-500: #34343A;   /* Iron — strong border / disabled fill */
-  --ink-400: #55555E;   /* Slate — muted icon / placeholder     */
-  --ink-300: #80808A;   /* Ash — secondary / metadata text      */
-  --ink-200: #A8A8B0;   /* Smoke — tertiary on dark             */
-  --ink-100: #C9C9CF;   /* Fog — faint labels                   */
+  /* --- Base ink ladder (dark → light), pure neutral ---------- */
+  --ink-900: #000000;   /* Black — primary canvas (brand)       */
+  --ink-850: #0A0A0A;   /* near-black — deep panels             */
+  --ink-800: #141414;   /* Graphite — raised surface / card     */
+  --ink-700: #1E1E1E;   /* Gunmetal — elevated panel            */
+  --ink-600: #2B2B2B;   /* Steel — hairline borders, dividers   */
+  --ink-500: #3C3C3C;   /* Iron — strong border / disabled fill */
+  --ink-400: #555555;   /* Slate (brand) — muted icon / fill    */
+  --ink-300: #767676;   /* Ash — muted / metadata text          */
+  --ink-200: #9E9E9E;   /* Smoke — secondary text on dark       */
+  --ink-100: #D5D5D5;   /* Fog (brand) — faint labels / light   */
 
   /* --- Bone / paper (the "declassified document" side) ------- */
-  --bone-000: #FFFFFF;  /* Pure white                           */
-  --bone-100: #F4F2EC;  /* Bone — warm off-white, primary text  */
-  --bone-200: #E6E3DA;  /* Parchment — light-mode surface       */
-  --bone-300: #D6D2C6;  /* Manila — light-mode border           */
+  --bone-000: #FFFFFF;  /* Pure white (brand)                   */
+  --bone-100: #F7F7F7;  /* near-white — primary text on dark    */
+  --bone-200: #E8E8E8;  /* light-mode surface                   */
+  --bone-300: #D5D5D5;  /* light-mode border (brand)            */
 
-  /* --- Signal (the one accent — house gold, from 8genc.com) --- */
-  --signal-700: #B9AB54;  /* pressed                            */
-  --signal-600: #D3C66E;  /* hover                              */
-  --signal-500: #E4D789;  /* Signal Gold — primary accent       */
-  --signal-400: #EEE3A2;  /* hover-on-dark / focus glow         */
-  --signal-300: #F3EBBC;  /* tint text on dark                  */
-  --signal-tint: rgba(228, 215, 137, 0.14); /* wash             */
+  /* --- Signal (the one accent — Signal Sand, brand #ECE7AE) -- */
+  --signal-700: #C8C282;  /* pressed                            */
+  --signal-600: #D9D396;  /* hover                              */
+  --signal-500: #ECE7AE;  /* Signal Sand — primary accent       */
+  --signal-400: #F1ECC1;  /* hover-on-dark / focus glow         */
+  --signal-300: #F6F2D6;  /* tint text on dark                  */
+  --signal-tint: rgba(236, 231, 174, 0.14); /* wash             */
 
   /* --- Classified stamp red (used VERY sparingly) ------------ */
   --stamp-red: #E0322C;
@@ -105,15 +106,15 @@
   --surface-invert: var(--ink-900);
 
   --text-primary:   var(--ink-900);
-  --text-secondary: #3A3A40;
-  --text-muted:     #6A6A72;
-  --text-faint:     #9A9A9E;
+  --text-secondary: #3C3C3C;
+  --text-muted:     #666666;
+  --text-faint:     #9E9E9E;
   --text-invert:    var(--bone-100);
   --text-on-signal: var(--ink-900);
 
   --border-subtle:  var(--bone-300);
-  --border-default: #C2BEB2;
-  --border-strong:  #A6A296;
+  --border-default: #C4C4C4;
+  --border-strong:  #A8A8A8;
   --hairline:       rgba(8, 8, 10, 0.10);
 
   background: var(--surface-canvas);

@@ -110,7 +110,9 @@ a { color: inherit; }
   text-transform: lowercase;
   line-height: 1;
 }
-.wordmark__img { height: 22px; width: auto; display: block; }
+.wordmark__img { height: 21px; width: auto; display: block; }
+.wordmark__img--lg { height: 30px; }
+.auth-brand__wordmark { height: 30px; width: auto; display: block; margin-bottom: var(--space-5); }
 .wordmark b { color: var(--bone-100); }
 .wordmark .mk-accent { color: var(--signal-500); }
 .wordmark__sub {
@@ -403,7 +405,7 @@ a { color: inherit; }
 .chip--ok    { color: var(--ok-500);   border-color: rgba(61,174,107,0.35);  background: var(--ok-tint); }
 .chip--warn  { color: var(--warn-500); border-color: rgba(224,165,44,0.35);  background: var(--warn-tint); }
 .chip--info  { color: var(--info-500); border-color: rgba(76,141,214,0.35);  background: var(--info-tint); }
-.chip--signal{ color: var(--signal-400); border-color: rgba(228,215,137,0.45);  background: var(--signal-tint); }
+.chip--signal{ color: var(--signal-400); border-color: rgba(236,231,174,0.45);  background: var(--signal-tint); }
 
 /* ------------------------------------------------------------
    TAGS / META
@@ -671,7 +673,7 @@ a { color: inherit; }
   color: var(--text-secondary);
 }
 .track__tab svg { width: 14px; height: 14px; }
-.track--consultant .track__tab { color: var(--signal-400); border-color: rgba(228,215,137,0.4); }
+.track--consultant .track__tab { color: var(--signal-400); border-color: rgba(236,231,174,0.4); }
 .track--client .track__tab { color: var(--info-500); border-color: rgba(76,141,214,0.35); }
 .track__title { font-family: var(--font-display); font-weight: var(--fw-heavy); text-transform: uppercase; letter-spacing: var(--ls-tight); font-size: var(--fs-2xl); margin-top: var(--space-5); }
 .track__body { margin-top: var(--space-4); color: var(--text-secondary); line-height: var(--lh-body); max-width: 48ch; }

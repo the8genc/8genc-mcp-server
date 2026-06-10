@@ -22,6 +22,7 @@ export default function AuthShell({ children, sub = 'Authorized personnel only. 
           <aside className="auth-brand bg-grid">
             <img className="auth-brand__motif motif" src={MOTIF} alt="" aria-hidden="true" />
             <div className="auth-brand__top">
+              <img className="auth-brand__wordmark" src={WORDMARK} alt="8genC" />
               <span className="kicker">mcp.8genc.com / access</span>
             </div>
             <div className="auth-brand__mid">

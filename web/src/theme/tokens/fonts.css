@@ -1,14 +1,20 @@
 /* ============================================================
    8genC — FONTS
-   The 8genC wordmark is a heavy, squared, industrial display
-   face. We can't ship the proprietary logo font, so headlines
-   use ARCHIVO (a wide, confident grotesque — heavy weights
-   read close to the wordmark) and all tactical/dossier labels,
-   codes and metadata use JETBRAINS MONO.
-   --> SUBSTITUTION FLAGGED to the user in readme.md.
+   Per the official 8genC brand kit (Adobe Express):
+     • Display / headlines : "HelveticaNeue BlackCond" (heavy
+       condensed neo-grotesque) + the wider Helvetica Neue family.
+     • Body / dossier copy : "Bulletin Typewriter MN" (typewriter).
+   Both are proprietary (Linotype / Monotype) and cannot ship in
+   a web design system, so we substitute the nearest Google Fonts:
+     • HelveticaNeue BlackCond  ->  SAIRA CONDENSED (300–900)
+     • Helvetica Neue (UI roles) ->  SAIRA (the upright sibling)
+     • Bulletin Typewriter MN    ->  CUTIVE MONO (clean typewriter)
+   --> SUBSTITUTION FLAGGED to the user in readme.md / NOTES.md.
+       Drop the real licensed faces in /assets/fonts and swap the
+       @font-face below to go pixel-exact.
 
    Loaded from Google Fonts so consumers/cards render offline-
    tolerant. Each card/kit HTML also <link>s these directly.
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@300;400;500;600;700;800;900&family=Saira:wght@400;500;600;700&family=Cutive+Mono&display=swap');

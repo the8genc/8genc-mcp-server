@@ -1,17 +1,19 @@
 /* ============================================================
    8genC — TYPOGRAPHY
-   Two families do all the work:
-     • Display / UI : Archivo  (wide industrial grotesque)
-     • Mono / dossier: JetBrains Mono (codes, eyebrows, meta)
+   Faithful to the official brand kit's three roles:
+     • Display / headlines : Saira Condensed  (= HelveticaNeue BlackCond)
+     • UI / sans          : Saira            (= Helvetica Neue family)
+     • Body / dossier mono : Cutive Mono      (= Bulletin Typewriter MN)
    Display headlines run TIGHT + UPPERCASE for the "operative
-   briefing" feel. Mono eyebrows run WIDE + UPPERCASE.
+   briefing" feel. The typewriter carries body copy, eyebrows,
+   codes and metadata — the brand's "typed memo" texture.
    ============================================================ */
 
 :root {
   /* Families */
-  --font-display: 'Archivo', 'Arial Narrow', system-ui, sans-serif;
-  --font-sans:    'Archivo', system-ui, -apple-system, sans-serif;
-  --font-mono:    'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --font-display: 'Saira Condensed', 'Arial Narrow', system-ui, sans-serif;
+  --font-sans:    'Saira', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-mono:    'Cutive Mono', 'Courier New', Courier, ui-monospace, monospace;
 
   /* Weights */
   --fw-regular: 400; /* @kind font */
@@ -64,10 +66,10 @@
   --eyebrow-size:   var(--fs-xs);
   --eyebrow-spacing: var(--ls-widest);
 
-  /* Body */
-  --body-family: var(--font-sans);
+  /* Body — typewriter (Bulletin Typewriter MN) for the dossier feel */
+  --body-family: var(--font-mono);
   --body-size:   var(--fs-md);
-  --body-leading: var(--lh-body);
+  --body-leading: var(--lh-relaxed);
 
   /* Code / data */
   --mono-family: var(--font-mono);
@@ -98,9 +100,9 @@
   text-transform: uppercase;
 }
 .t-body {
-  font-family: var(--font-sans);
+  font-family: var(--body-family);
   font-size: var(--fs-md);
-  line-height: var(--lh-body);
+  line-height: var(--lh-relaxed);
   font-weight: var(--fw-regular);
 }
 .t-mono {

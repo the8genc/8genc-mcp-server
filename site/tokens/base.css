@@ -12,9 +12,9 @@ html { -webkit-text-size-adjust: 100%; background: var(--surface-canvas); }
 
 body {
   margin: 0;
-  font-family: var(--font-sans);
+  font-family: var(--body-family);
   font-size: var(--fs-md);
-  line-height: var(--lh-body);
+  line-height: var(--lh-relaxed);
   color: var(--text-primary);
   background: var(--surface-canvas);
   -webkit-font-smoothing: antialiased;

@@ -42,7 +42,7 @@
   --shadow-md:  0 8px 24px -8px rgba(0,0,0,0.60);
   --shadow-lg:  0 24px 60px -16px rgba(0,0,0,0.70);
   /* Signal glow — focus / active accent on dark */
-  --glow-signal: 0 0 0 1px var(--signal-500), 0 0 24px -4px rgba(228,215,137,0.45);
+  --glow-signal: 0 0 0 1px var(--signal-500), 0 0 24px -4px rgba(236,231,174,0.45);
   --ring-focus:  0 0 0 2px var(--surface-canvas), 0 0 0 4px var(--focus-ring);
 
   /* ---- Motion --------------------------------------------- */
