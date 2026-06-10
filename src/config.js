@@ -74,7 +74,14 @@ export const config = {
   },
 
   mcpScope: 'mcp:tools',
-  patPrefix: '8genc_pat_'
+  patPrefix: '8genc_pat_',
+
+  // Default access tier applied to a skill when it's first synced into the
+  // catalog (and the fallback tier for a slug not yet in the catalog). 'consultant'
+  // means newly-synced skills are visible to consultants + admins by default;
+  // clients still need an explicit allow override. Set to 'admin' for
+  // safe-by-default (every new skill hidden until an admin classifies it).
+  rbacDefaultTier: process.env.RBAC_DEFAULT_TIER || 'consultant'
 };
 
 export function resourceUrl() {
