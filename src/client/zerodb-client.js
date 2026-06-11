@@ -180,10 +180,56 @@ export class ZeroDBClient {
     });
   }
 
-  async searchMemory(query, limit = 10, scope = 'agent') {
+  async searchMemory(query, limit = 10, namespace = 'global') {
     return this.request('POST', '/api/v1/public/memory/v2/recall', {
-      query, limit, namespace: 'global'
+      query,
+      limit,
+      namespace
     });
+  }
+
+  // ── Multi-tenant client memory ──────────────────────────────────
+  // One shared ZeroDB instance, partitioned per client by namespace. The SERVER
+  // enforces membership before calling these — the namespace is the partition,
+  // membership is the security boundary. client_id is also stamped in metadata
+  // as a defense-in-depth filter.
+  // ZeroDB only accepts 'global' | 'project:<id>' | 'session:<id>' namespaces,
+  // so each client's memory lives under a dedicated session namespace.
+  clientNamespace(clientId) {
+    return `session:client-${clientId}`;
+  }
+
+  async storeClientMemory(clientId, content, tags = [], metadata = {}) {
+    return this.request('POST', '/api/v1/public/memory/v2/remember', {
+      content,
+      namespace: this.clientNamespace(clientId),
+      tags: ['client', clientId, ...tags],
+      metadata: { ...metadata, client_id: clientId },
+      memory_type: 'episodic',
+      importance: typeof metadata.importance === 'number' ? metadata.importance : 0.7
+    });
+  }
+
+  async searchClientMemory(clientId, query, limit = 10) {
+    const res = await this.request('POST', '/api/v1/public/memory/v2/recall', {
+      query: query || '',
+      limit,
+      namespace: this.clientNamespace(clientId)
+    });
+    // Defense-in-depth: never return another tenant's rows even if the API
+    // treats namespace as a soft hint. Only drop rows that explicitly belong to
+    // a different client; rows without client_id metadata are kept.
+    const results = res?.results || res?.memories || res;
+    if (Array.isArray(results)) {
+      const filtered = results.filter((r) => {
+        const cid = r?.metadata?.client_id;
+        return !cid || cid === clientId;
+      });
+      if (Array.isArray(res?.results)) return { ...res, results: filtered };
+      if (Array.isArray(res?.memories)) return { ...res, memories: filtered };
+      return filtered;
+    }
+    return res;
   }
 
   // Chat completions (for AI-powered PRD generation)
