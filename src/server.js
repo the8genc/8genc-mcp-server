@@ -20,17 +20,20 @@ import {
 import { PLATFORM_TOOLS, executePlatformTool } from './tools/platform-tools.js';
 import { SKILL_TOOLS, executeSkillTool } from './tools/skill-tools.js';
 import { ORCHESTRATION_TOOLS, executeOrchestrationTool } from './tools/orchestration-tools.js';
+import { CLIENT_TOOLS, executeClientTool } from './tools/client-tools.js';
 import {
   resolveUser,
   isAdmin,
   canUseTool,
   decideSlug,
   filterSkillResult,
-  buildClientContextBlock
+  buildClientContextBlock,
+  accessibleClients,
+  resolveClient
 } from './auth/access.js';
 import { config } from './config.js';
 import * as skillAccess from './db/repositories/skillAccess.js';
-import * as clientContexts from './db/repositories/clientContexts.js';
+import * as clients from './db/repositories/clients.js';
 import { syncCatalog } from './skills/catalogSync.js';
 
 // PRD generation/validation/templates/memory are no longer server tools — that
@@ -40,7 +43,8 @@ import { syncCatalog } from './skills/catalogSync.js';
 export const ALL_TOOLS = [
   ...PLATFORM_TOOLS,
   ...SKILL_TOOLS,
-  ...ORCHESTRATION_TOOLS
+  ...ORCHESTRATION_TOOLS,
+  ...CLIENT_TOOLS
 ];
 
 // Map each non-skill tool name to its executor. Platform tools take (name, args, client);
@@ -50,6 +54,7 @@ for (const t of PLATFORM_TOOLS) PLATFORM_EXECUTORS[t.name] = executePlatformTool
 
 const SKILL_TOOL_NAMES = new Set(SKILL_TOOLS.map((t) => t.name));
 const ORCHESTRATION_TOOL_NAMES = new Set(ORCHESTRATION_TOOLS.map((t) => t.name));
+const CLIENT_TOOL_NAMES = new Set(CLIENT_TOOLS.map((t) => t.name));
 
 /**
  * @param {object} ctx
@@ -90,15 +95,76 @@ export function createMcpServer(ctx) {
   const decide = (user, slug, accessSet) =>
     decideSlug(user, slug, accessSet, config.rbacDefaultTier);
 
-  /** Fetch + render the user's client-context block (or null). */
+  // Per-request membership cache: the client tenants this user may access.
+  const clientCache = new Map(); // userId -> Promise<client rows>
+  function getAccessibleClients(user) {
+    if (!user?.userId && !user?.owner) return Promise.resolve([]);
+    const key = user.owner ? '__owner__' : user.userId;
+    if (!clientCache.has(key)) {
+      const load = isAdmin(user) ? clients.listAll() : clients.listForUser(user.userId);
+      clientCache.set(
+        key,
+        load.catch((err) => {
+          console.error(`[${serverName}] client membership load failed: ${err.message}`);
+          return []; // fail-closed
+        })
+      );
+    }
+    return clientCache.get(key);
+  }
+
+  /** Build a membership-checked client resolver for the client tools. */
+  function makeResolveClientId(user, accessible) {
+    const accessibleIds = accessible.map((c) => c.id);
+    return async (ref) => {
+      let explicitId = null;
+      if (ref) {
+        let row = null;
+        try {
+          row = await clients.resolveRef(ref);
+        } catch {
+          row = null;
+        }
+        if (!row) return { ok: false, reason: 'denied' };
+        explicitId = row.id;
+      }
+      return resolveClient(user, explicitId, accessibleIds);
+    };
+  }
+
+  /** Inject the caller's client context (scope + recent memory) when unambiguous. */
   async function clientContextBlock(user) {
-    if (!user?.userId) return null; // owner / stdio has no scoped data
+    if (!user?.userId) return null; // owner / stdio has no single scoped client
+    let accessible;
     try {
-      return buildClientContextBlock(await clientContexts.get(user.userId));
-    } catch (err) {
-      console.error(`[${serverName}] client-context load failed: ${err.message}`);
+      accessible = await getAccessibleClients(user);
+    } catch {
       return null;
     }
+    if (accessible.length !== 1) return null; // none or ambiguous → skip auto-inject
+    const c = accessible[0];
+
+    const scopeBlock = buildClientContextBlock(c); // null when no scope set
+    let memText = '';
+    if (client?.isAuthenticated) {
+      try {
+        const mem = await withTimeout(client.searchClientMemory(c.id, '', 5), 2500);
+        const results = (mem?.results || mem?.memories || []).slice(0, 5);
+        if (results.length) {
+          memText =
+            `\n**Recent client memory:**\n` +
+            results
+              .map((r) => `- ${String(r.content || r.text || '').replace(/\s+/g, ' ').slice(0, 300)}`)
+              .filter((l) => l.length > 2)
+              .join('\n');
+        }
+      } catch {
+        // ZeroDB slow/unavailable — degrade to scope-only, never block the prompt.
+      }
+    }
+    if (!scopeBlock && !memText) return null;
+    const header = scopeBlock || `\n\n---\n\n## Client Context\n\nShared context for ${c.name}.\n`;
+    return header + (memText ? `\n${memText}\n` : '');
   }
 
   // ── Tools ──────────────────────────────────────────────────────
@@ -151,6 +217,14 @@ export function createMcpServer(ctx) {
         const accessSet = isAdmin(user) ? null : await getAccessSet(user);
         const isAccessible = (id) => decide(user, id, accessSet);
         result = await executeOrchestrationTool(name, args || {}, ctx, { isAccessible });
+      } else if (CLIENT_TOOL_NAMES.has(name)) {
+        // Client memory is membership-gated: resolve the caller's accessible
+        // clients, then resolve+check the target client before any ZeroDB call.
+        const accessible = await getAccessibleClients(user);
+        result = await executeClientTool(name, args || {}, ctx, {
+          clients: accessible,
+          resolveClientId: makeResolveClientId(user, accessible)
+        });
       } else {
         const executor = PLATFORM_EXECUTORS[name];
         if (!executor) {
@@ -234,6 +308,15 @@ export function createMcpServer(ctx) {
   });
 
   return server;
+}
+
+/** Resolve `p` but reject if it takes longer than `ms` (used to bound the
+ *  optional client-memory recall on the interactive GetPrompt path). */
+function withTimeout(p, ms) {
+  return Promise.race([
+    p,
+    new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), ms))
+  ]);
 }
 
 function errorResult(message, tool) {
