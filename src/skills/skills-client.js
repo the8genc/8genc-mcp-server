@@ -260,7 +260,7 @@ export class SkillsClient {
   async searchSkills(query, limit = 10) {
     if (this.zerodb?.isAuthenticated) {
       try {
-        const res = await this.zerodb.searchMemory(`skill ${query}`, limit, 'agent');
+        const res = await this.zerodb.searchMemory(`skill ${query}`, limit);
         const hits = (res.results || []).filter((r) => r.metadata?.type === 'skill');
         if (hits.length) {
           return {

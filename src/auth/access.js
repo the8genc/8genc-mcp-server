@@ -111,9 +111,54 @@ export function filterSkillResult(result, user, accessSet, defaultTier) {
   return result;
 }
 
+// ── Client tenants (multi-tenant memory/scope) ──────────────────────────────
+// Membership is the wall: a user may read/write a client's context only if
+// they're a member; admin/owner bypass. `memberClientIds` is the set the repo
+// loaded for this user (kept out of this pure module).
+
+/** Can this user access this client tenant? admin/owner → always. */
+export function canAccessClient(user, clientId, memberClientIds = []) {
+  if (isAdmin(user)) return true;
+  if (!clientId) return false;
+  return (memberClientIds instanceof Set ? memberClientIds.has(clientId) : memberClientIds.includes(clientId));
+}
+
+/** The clients this user may access: admin/owner → all; else only memberships. */
+export function accessibleClients(user, memberClientIds = [], allClients = []) {
+  if (isAdmin(user)) return allClients;
+  const ids = memberClientIds instanceof Set ? memberClientIds : new Set(memberClientIds);
+  return allClients.filter((c) => ids.has(c.id));
+}
+
 /**
- * Render a client_contexts row into the injected "## Client Context" block, or
- * null when there's nothing to inject. Pure; values are size-capped.
+ * Resolve which client a request targets, given an explicit ref (already
+ * resolved to a client id or null) and the user's accessible clients.
+ * Returns one of:
+ *   { ok:true, clientId }
+ *   { ok:false, reason:'none' }       — user has no accessible clients
+ *   { ok:false, reason:'ambiguous', options:[ids] } — must pass an explicit client
+ *   { ok:false, reason:'denied' }     — explicit client not accessible
+ */
+export function resolveClient(user, explicitClientId, accessibleIds = []) {
+  const ids = accessibleIds instanceof Set ? [...accessibleIds] : accessibleIds;
+  if (explicitClientId) {
+    if (canAccessClient(user, explicitClientId, ids)) return { ok: true, clientId: explicitClientId };
+    return { ok: false, reason: 'denied' };
+  }
+  if (isAdmin(user)) {
+    // admin without an explicit client + a single accessible → use it; else ambiguous
+    if (ids.length === 1) return { ok: true, clientId: ids[0] };
+    return { ok: false, reason: ids.length === 0 ? 'none' : 'ambiguous', options: ids };
+  }
+  if (ids.length === 0) return { ok: false, reason: 'none' };
+  if (ids.length === 1) return { ok: true, clientId: ids[0] };
+  return { ok: false, reason: 'ambiguous', options: ids };
+}
+
+/**
+ * Render a client_contexts / clients-tenant scope row into the injected
+ * "## Client Context" block, or null when there's nothing to inject. Pure;
+ * values are size-capped. Works on any row with coda_files/variables/notes.
  */
 export function buildClientContextBlock(row) {
   if (!row) return null;
