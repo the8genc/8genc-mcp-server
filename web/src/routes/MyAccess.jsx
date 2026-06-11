@@ -14,16 +14,14 @@ export default function MyAccess() {
   if (err) return <div className="form-msg form-msg--err">{err}</div>;
   if (!data) return <div className="app-loading">Loading…</div>;
 
-  const ctx = data.context || {};
-  const files = Array.isArray(ctx.coda_files) ? ctx.coda_files : [];
-  const vars = Object.entries(ctx.variables || {});
+  const clients = data.clients || [];
 
   return (
     <>
       <div className="portal__head">
         <div>
           <h1 className="portal__name">My access</h1>
-          <p className="portal__email mono">role: {data.role} · skills you can engage over MCP</p>
+          <p className="portal__email mono">role: {data.role} · skills you can engage + clients you can work on</p>
         </div>
       </div>
 
@@ -38,31 +36,36 @@ export default function MyAccess() {
         ))}
       </div>
 
-      {(files.length > 0 || vars.length > 0 || ctx.notes) && (
-        <div className="panel-block" style={{ marginTop: 'var(--space-4)' }}>
-          <h2 className="h-section" style={{ fontSize: 'var(--fs-lg)' }}>Your data-scope</h2>
-          <p className="mono" style={{ fontSize: 'var(--fs-xs)', color: 'var(--text-muted)' }}>
-            These sources are injected into your skill context automatically.
-          </p>
-          {files.length > 0 && (
-            <ul>
-              {files.map((f, i) => (
-                <li key={i} className="mono" style={{ fontSize: 'var(--fs-xs)' }}>
-                  {f.label || f.doc_id || 'document'}{f.url ? <> — <a href={f.url} target="_blank" rel="noreferrer">{f.url}</a></> : null}
-                </li>
-              ))}
-            </ul>
-          )}
-          {vars.length > 0 && (
-            <ul>
-              {vars.map(([k, v]) => (
-                <li key={k} className="mono" style={{ fontSize: 'var(--fs-xs)' }}>{k}: {typeof v === 'string' ? v : JSON.stringify(v)}</li>
-              ))}
-            </ul>
-          )}
-          {ctx.notes && <p className="mono" style={{ fontSize: 'var(--fs-xs)' }}>{ctx.notes}</p>}
-        </div>
-      )}
+      <div className="panel-block" style={{ marginTop: 'var(--space-4)' }}>
+        <h2 className="h-section" style={{ fontSize: 'var(--fs-lg)' }}>Clients</h2>
+        <p className="mono" style={{ fontSize: 'var(--fs-xs)', color: 'var(--text-muted)' }}>
+          Shared context + memory you can read/write. Use the <code>client_memory_*</code> tools over MCP
+          (pass the client slug when you can access more than one).
+        </p>
+        {clients.length === 0 && <p className="token-empty mono">You're not assigned to any client yet.</p>}
+        {clients.map((c) => {
+          const files = Array.isArray(c.coda_files) ? c.coda_files : [];
+          const vars = Object.entries(c.variables || {});
+          return (
+            <div key={c.id} style={{ padding: '10px 0', borderBottom: '1px solid var(--hairline)' }}>
+              <strong>{c.name}</strong> <code className="mono" style={{ fontSize: 'var(--fs-2xs)' }}>{c.slug}</code>
+              {files.length > 0 && (
+                <ul className="mono" style={{ fontSize: 'var(--fs-xs)', marginTop: 4 }}>
+                  {files.map((f, i) => (
+                    <li key={i}>{f.label || f.doc_id || 'document'}{f.url ? <> — <a href={f.url} target="_blank" rel="noreferrer">{f.url}</a></> : null}</li>
+                  ))}
+                </ul>
+              )}
+              {vars.length > 0 && (
+                <div className="mono" style={{ fontSize: 'var(--fs-2xs)', color: 'var(--text-muted)' }}>
+                  {vars.map(([k, v]) => `${k}: ${typeof v === 'string' ? v : JSON.stringify(v)}`).join(' · ')}
+                </div>
+              )}
+              {c.notes && <div className="mono" style={{ fontSize: 'var(--fs-2xs)' }}>{c.notes}</div>}
+            </div>
+          );
+        })}
+      </div>
     </>
   );
 }

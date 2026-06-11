@@ -19,6 +19,7 @@ export default function Layout({ children }) {
               {user && <li><Link className="nav__link" to="/profile">Profile</Link></li>}
               {user?.role === 'admin' && <li><Link className="nav__link" to="/admin/users">Users</Link></li>}
               {user?.role === 'admin' && <li><Link className="nav__link" to="/admin/skills">Skills</Link></li>}
+              {user?.role === 'admin' && <li><Link className="nav__link" to="/admin/clients">Clients</Link></li>}
             </ul>
             {user && (
               <div className="nowrap-actions">

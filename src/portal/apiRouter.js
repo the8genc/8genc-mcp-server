@@ -16,7 +16,6 @@ import * as pats from '../db/repositories/personalTokens.js';
 import * as emailTokens from '../db/repositories/emailTokens.js';
 import * as skillsCatalog from '../db/repositories/skillsCatalog.js';
 import * as skillAccess from '../db/repositories/skillAccess.js';
-import * as clientContexts from '../db/repositories/clientContexts.js';
 import * as clients from '../db/repositories/clients.js';
 import { syncCatalog } from '../skills/catalogSync.js';
 import { decideSlug } from '../auth/access.js';
@@ -276,12 +275,19 @@ export function createPortalApiRouter({ oauth = null, skills = null } = {}) {
   }));
 
   router.get('/admin/users/:id/access', ...adminAction(async (_req, res, t) => {
-    const [catalog, overrides, context] = await Promise.all([
+    // Data-scope now lives on the client tenant; surface the user's client
+    // memberships here (read-only) so an admin sees what they can reach.
+    const [catalog, overrides, memberClients] = await Promise.all([
       skillsCatalog.listCatalog(),
       skillAccess.listOverrides(t.id),
-      clientContexts.get(t.id)
+      clients.listForUser(t.id)
     ]);
-    return ok(res, { user: users.publicUser(t), catalog, overrides, context });
+    return ok(res, {
+      user: users.publicUser(t),
+      catalog,
+      overrides,
+      clients: memberClients.map((c) => ({ id: c.id, slug: c.slug, name: c.name }))
+    });
   }));
 
   const overrideSchema = z.object({
@@ -293,29 +299,6 @@ export function createPortalApiRouter({ oauth = null, skills = null } = {}) {
     if (!parsed.success) return fail(res, 400, 'invalid_input');
     const row = await skillAccess.setOverride(t.id, parsed.data.skillId, parsed.data.effect, req.sessionUser.id);
     return ok(res, { override: row });
-  }));
-
-  const contextSchema = z.object({
-    coda_files: z
-      .array(z.object({ doc_id: z.string().optional(), url: z.string().optional(), label: z.string().optional() }))
-      .max(100)
-      .optional(),
-    variables: z.record(z.any()).optional(),
-    notes: z.string().max(5000).nullable().optional()
-  });
-  router.put('/admin/users/:id/context', ...adminAction(async (req, res, t) => {
-    const parsed = contextSchema.safeParse(req.body);
-    if (!parsed.success) return fail(res, 400, 'invalid_input', { details: parsed.error.flatten() });
-    const row = await clientContexts.upsert(
-      t.id,
-      {
-        coda_files: parsed.data.coda_files ?? [],
-        variables: parsed.data.variables ?? {},
-        notes: parsed.data.notes ?? null
-      },
-      req.sessionUser.id
-    );
-    return ok(res, { context: row });
   }));
 
   // ── Admin: client tenants (provision + scope + membership) ─────

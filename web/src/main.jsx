@@ -23,6 +23,8 @@ import MyAccess from './routes/MyAccess.jsx';
 import AdminUsers from './routes/admin/Users.jsx';
 import AdminSkills from './routes/admin/Skills.jsx';
 import UserAccess from './routes/admin/UserAccess.jsx';
+import AdminClients from './routes/admin/Clients.jsx';
+import ClientDetail from './routes/admin/ClientDetail.jsx';
 
 const withLayout = (el) => <Layout>{el}</Layout>;
 
@@ -50,6 +52,8 @@ createRoot(document.getElementById('root')).render(
           <Route path="/admin/users" element={<RequireAdmin>{withLayout(<AdminUsers />)}</RequireAdmin>} />
           <Route path="/admin/users/:id" element={<RequireAdmin>{withLayout(<UserAccess />)}</RequireAdmin>} />
           <Route path="/admin/skills" element={<RequireAdmin>{withLayout(<AdminSkills />)}</RequireAdmin>} />
+          <Route path="/admin/clients" element={<RequireAdmin>{withLayout(<AdminClients />)}</RequireAdmin>} />
+          <Route path="/admin/clients/:id" element={<RequireAdmin>{withLayout(<ClientDetail />)}</RequireAdmin>} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>
