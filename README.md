@@ -83,7 +83,7 @@ Add to your Claude Code, Cursor, or Windsurf MCP config:
 }
 ```
 
-## Tools (11)
+## Tools (14)
 
 ### Platform Discovery (3 tools)
 
@@ -125,6 +125,23 @@ caller can access** (RBAC), so each user only orchestrates their allowed set.
 
 The server plans and hands back contracts; execution happens in the caller's harness
 (each level run concurrently) or the skills repo's standalone orchestrator runtime.
+
+### Client memory — multi-tenant shared context (3 tools)
+
+A **client** is a tenant an admin provisions; it owns a shared data-scope and a
+dedicated ZeroDB memory namespace. Users **assigned to a client** (membership) read
+and write its context; admins access all, everyone else only their assigned clients.
+One ZeroDB instance, namespaced per client (`session:client-<id>`); the server's
+membership check is the boundary.
+
+| Tool | Description |
+|------|-------------|
+| `client_list` | The client tenants you can access. |
+| `client_memory_store` | Persist context to a client's shared memory (carries across sessions for all its members). |
+| `client_memory_search` | Recall a client's shared memory by query. |
+
+When you can access exactly one client, its scope + recent memory is also auto-injected
+into skill/prompt context. Clients are provisioned and members assigned in the admin dashboard.
 
 **Source of truth is the GitHub repo** (`SKILLS_REPO`, default
 [`the8genc/ai-8gent-skills`](https://github.com/the8genc/ai-8gent-skills)) laid out

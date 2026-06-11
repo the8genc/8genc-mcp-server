@@ -26,7 +26,10 @@ const TOOLS = [
   { name: 'skill_sync', description: 'Mirror skills from GitHub into ZeroDB' },
   { name: 'orchestration_manifests', description: 'Machine-readable skill handoff graph (consumes/produces/tools/gates)' },
   { name: 'orchestration_plan', description: 'Resolve accessible skills into parallel/dependent execution levels' },
-  { name: 'orchestration_guide', description: 'Orchestration spec + how to run it in your authenticated context' }
+  { name: 'orchestration_guide', description: 'Orchestration spec + how to run it in your authenticated context' },
+  { name: 'client_list', description: 'List the client tenants you can access' },
+  { name: 'client_memory_store', description: "Persist context to a client's shared memory (membership-gated)" },
+  { name: 'client_memory_search', description: "Recall a client's shared memory (membership-gated)" }
 ];
 
 export function mountAgentEndpoints(app, { serverName = '8genC MCP', version = '0.0.0' } = {}) {

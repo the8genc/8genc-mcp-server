@@ -17,6 +17,7 @@ import * as emailTokens from '../db/repositories/emailTokens.js';
 import * as skillsCatalog from '../db/repositories/skillsCatalog.js';
 import * as skillAccess from '../db/repositories/skillAccess.js';
 import * as clientContexts from '../db/repositories/clientContexts.js';
+import * as clients from '../db/repositories/clients.js';
 import { syncCatalog } from '../skills/catalogSync.js';
 import { decideSlug } from '../auth/access.js';
 import { config } from '../config.js';
@@ -317,19 +318,81 @@ export function createPortalApiRouter({ oauth = null, skills = null } = {}) {
     return ok(res, { context: row });
   }));
 
+  // ── Admin: client tenants (provision + scope + membership) ─────
+  router.get('/admin/clients', requireAdmin(), requirePasswordChange(), async (_req, res) =>
+    ok(res, { clients: await clients.listAll({ includeArchived: true }) })
+  );
+
+  const clientCreateSchema = z.object({ name: z.string().min(2).max(80), slug: z.string().max(60).optional() });
+  router.post('/admin/clients', requireAdmin(), requirePasswordChange(), async (req, res) => {
+    const parsed = clientCreateSchema.safeParse(req.body);
+    if (!parsed.success) return fail(res, 400, 'invalid_input', { details: parsed.error.flatten() });
+    const client = await clients.createClient({ ...parsed.data, createdBy: req.sessionUser.id });
+    return ok(res, { client });
+  });
+
+  const clientLoad = (fn) => [requireAdmin(), requirePasswordChange(), async (req, res) => {
+    const client = await clients.getById(req.params.id);
+    if (!client) return fail(res, 404, 'client_not_found');
+    return fn(req, res, client);
+  }];
+
+  router.get('/admin/clients/:id', ...clientLoad(async (_req, res, c) =>
+    ok(res, { client: c, members: await clients.listMembers(c.id) })
+  ));
+
+  const clientPatchSchema = z.object({
+    name: z.string().min(2).max(80).optional(),
+    status: z.enum(['active', 'archived']).optional(),
+    coda_files: z.array(z.object({ doc_id: z.string().optional(), url: z.string().optional(), label: z.string().optional() })).max(100).optional(),
+    variables: z.record(z.any()).optional(),
+    notes: z.string().max(5000).nullable().optional()
+  });
+  router.patch('/admin/clients/:id', ...clientLoad(async (req, res, c) => {
+    const parsed = clientPatchSchema.safeParse(req.body);
+    if (!parsed.success) return fail(res, 400, 'invalid_input', { details: parsed.error.flatten() });
+    const d = parsed.data;
+    let client = c;
+    if (d.status) client = await clients.setStatus(c.id, d.status, req.sessionUser.id);
+    if (d.name !== undefined || d.coda_files !== undefined || d.variables !== undefined || d.notes !== undefined) {
+      client = await clients.updateScope(c.id, d, req.sessionUser.id);
+    }
+    return ok(res, { client });
+  }));
+
+  const memberSchema = z.object({ userId: z.string().uuid() });
+  router.post('/admin/clients/:id/members', ...clientLoad(async (req, res, c) => {
+    const parsed = memberSchema.safeParse(req.body);
+    if (!parsed.success) return fail(res, 400, 'invalid_input');
+    const target = await users.findById(parsed.data.userId);
+    if (!target) return fail(res, 404, 'user_not_found');
+    await clients.addMember(c.id, target.id, req.sessionUser.id);
+    return ok(res, { members: await clients.listMembers(c.id) });
+  }));
+
+  router.delete('/admin/clients/:id/members/:userId', ...clientLoad(async (req, res, c) => {
+    await clients.removeMember(c.id, req.params.userId);
+    return ok(res, { members: await clients.listMembers(c.id) });
+  }));
+
   // ── Self: my access (read-only) ───────────────────────────────
   router.get('/me/access', requireSession(), async (req, res) => {
     const u = req.sessionUser;
     const me = { userId: u.id, role: u.role, owner: false };
-    const [accessSet, context, catalog] = await Promise.all([
+    const isAdminUser = u.role === 'admin';
+    const [accessSet, catalog, myClients] = await Promise.all([
       skillAccess.loadAccessSet(u.id),
-      clientContexts.get(u.id),
-      skillsCatalog.listCatalog()
+      skillsCatalog.listCatalog(),
+      isAdminUser ? clients.listAll() : clients.listForUser(u.id)
     ]);
     const accessible = catalog
       .filter((s) => decideSlug(me, s.slug, accessSet, config.rbacDefaultTier))
       .map((s) => ({ slug: s.slug, name: s.name, description: s.description, tier: s.tier }));
-    return ok(res, { role: u.role, skills: accessible, context });
+    return ok(res, {
+      role: u.role,
+      skills: accessible,
+      clients: myClients.map((c) => ({ id: c.id, slug: c.slug, name: c.name, coda_files: c.coda_files, variables: c.variables, notes: c.notes }))
+    });
   });
 
   // ── OAuth (authorization-server) consent + social login (PR3) ──

@@ -102,12 +102,21 @@ describe('Tool Definitions', () => {
     );
   });
 
-  it('all 11 tools have unique names', async () => {
+  it('client tools have correct schemas', async () => {
+    const { CLIENT_TOOLS } = await import('../src/tools/client-tools.js');
+    assert.equal(CLIENT_TOOLS.length, 3);
+    assert.deepEqual(
+      CLIENT_TOOLS.map((t) => t.name),
+      ['client_list', 'client_memory_store', 'client_memory_search']
+    );
+  });
+
+  it('all 14 tools have unique names', async () => {
     const { ALL_TOOLS } = await import('../src/server.js');
-    assert.equal(ALL_TOOLS.length, 11); // 3 platform + 5 skill + 3 orchestration
+    assert.equal(ALL_TOOLS.length, 14); // 3 platform + 5 skill + 3 orchestration + 3 client
 
     const names = ALL_TOOLS.map(t => t.name);
-    assert.equal(new Set(names).size, 11, 'Duplicate tool names found');
+    assert.equal(new Set(names).size, 14, 'Duplicate tool names found');
   });
 });
 

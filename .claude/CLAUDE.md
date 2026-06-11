@@ -3,7 +3,7 @@
 This MCP server provides AINative platform discovery and a GitHub-backed Agent Skills library.
 PRD generation is delivered as the `prd-generator` Agent Skill (see below), not as server tools.
 
-## Available Tools (11)
+## Available Tools (14)
 
 ### Platform Discovery
 | Tool | Description |
@@ -32,6 +32,18 @@ Skills declare a `manifest:` block in SKILL.md frontmatter; `consumes`/`produces
 across skills form the dependency DAG, which the planner topo-sorts into parallel
 levels. Orchestration tools are **RBAC-scoped** — the plan only spans skills the
 caller's role/overrides allow.
+
+### Client memory (multi-tenant)
+| Tool | Description |
+|------|-------------|
+| `client_list` | Client tenants the caller can access |
+| `client_memory_store` | Persist context to a client's shared ZeroDB memory (membership-gated) |
+| `client_memory_search` | Recall a client's shared memory (membership-gated) |
+
+A `client` is a tenant (admin-provisioned) with a shared data-scope + a dedicated
+ZeroDB memory namespace (`session:client-<id>`). Membership (`client_members`) is the
+wall: admins access all clients, others only assigned ones. When the caller has exactly
+one accessible client, its scope + recent memory auto-injects into skill prompts.
 
 Skills are also exposed as **MCP prompts** — each skill in the repo appears as a
 selectable prompt (name = skill slug) whose body is the `SKILL.md`. An optional
