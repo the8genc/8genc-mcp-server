@@ -7,6 +7,11 @@
  */
 
 import { randomBytes } from 'node:crypto';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
+
+// Repo root (config.js lives in src/). Used to locate the tool-credentials config dir.
+const REPO_ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 
 const bool = (v, dflt = false) =>
   v == null ? dflt : ['1', 'true', 'yes', 'on'].includes(String(v).toLowerCase());
@@ -78,6 +83,10 @@ export const config = {
 
   mcpScope: 'mcp:tools',
   patPrefix: '8genc_pat_',
+
+  // Where the tool-credentials config lives (admin registry + system .env + clients/<id>.env).
+  // The dashboard writes here too; both read the same source of truth.
+  credentialsDir: process.env.CREDENTIALS_DIR || join(REPO_ROOT, 'tool-credentials'),
 
   // Default access tier applied to a skill when it's first synced into the
   // catalog (and the fallback tier for a slug not yet in the catalog). 'admin'

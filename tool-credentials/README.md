@@ -33,3 +33,19 @@ test/credentials.test.ts  policy matrix + .env resolution + isolation (vitest)
 examples/                 tools.example.json (admin registry), clients.example.json, client.env.example
 ```
 `npm install && npm test` to verify; `npm run typecheck` to type-check.
+
+## Runtime integration (MCP server)
+
+The server wires this engine into its tool layer (`src/credentials/` is the JS/ESM runtime port):
+- `src/credentials/engine.js` — `resolveCredential` / `resolveSessionTools` (pure, dotenv).
+- `src/credentials/resolver.js` — `makeCredentialResolver()` reads `config.credentialsDir`
+  (`CREDENTIALS_DIR`, default this `tool-credentials/` dir): admin registry + system `.env` +
+  per-client `clients/<id>.env`.
+- `src/tools/credentials-tools.js` — the `tool_credentials_status` MCP tool: membership-gated
+  (same client resolution as the memory tools), reports each tool's policy + connection for the
+  caller's client. **No secrets are returned.**
+- Internal tool handlers can call `credentials.resolveForClient(clientId, tokens)` to get a
+  client-scoped `env` (shared keys from the system `.env`; client-owned keys from the client's
+  `.env`; client-owned-without-key → reported unavailable, admin key never used).
+
+Verified by `tests/credentials.test.js` (`node --test`).

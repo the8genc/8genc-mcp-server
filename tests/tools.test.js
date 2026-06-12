@@ -111,12 +111,12 @@ describe('Tool Definitions', () => {
     );
   });
 
-  it('all 14 tools have unique names', async () => {
+  it('all 15 tools have unique names', async () => {
     const { ALL_TOOLS } = await import('../src/server.js');
-    assert.equal(ALL_TOOLS.length, 14); // 3 platform + 5 skill + 3 orchestration + 3 client
+    assert.equal(ALL_TOOLS.length, 15); // 3 platform + 5 skill + 3 orchestration + 3 client + 1 credentials
 
     const names = ALL_TOOLS.map(t => t.name);
-    assert.equal(new Set(names).size, 14, 'Duplicate tool names found');
+    assert.equal(new Set(names).size, 15, 'Duplicate tool names found');
   });
 });
 

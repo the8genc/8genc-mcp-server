@@ -21,6 +21,8 @@ import { PLATFORM_TOOLS, executePlatformTool } from './tools/platform-tools.js';
 import { SKILL_TOOLS, executeSkillTool } from './tools/skill-tools.js';
 import { ORCHESTRATION_TOOLS, executeOrchestrationTool } from './tools/orchestration-tools.js';
 import { CLIENT_TOOLS, executeClientTool } from './tools/client-tools.js';
+import { CREDENTIALS_TOOLS, executeCredentialsTool } from './tools/credentials-tools.js';
+import { makeCredentialResolver } from './credentials/resolver.js';
 import {
   resolveUser,
   isAdmin,
@@ -44,8 +46,21 @@ export const ALL_TOOLS = [
   ...PLATFORM_TOOLS,
   ...SKILL_TOOLS,
   ...ORCHESTRATION_TOOLS,
-  ...CLIENT_TOOLS
+  ...CLIENT_TOOLS,
+  ...CREDENTIALS_TOOLS
 ];
+
+// File-backed tool-credential resolver (admin registry + system .env + per-client .env).
+// Lazily built and refreshed so dashboard edits are picked up without a restart.
+let _credResolver = null;
+let _credLoadedAt = 0;
+function credentialResolver() {
+  if (!_credResolver || Date.now() - _credLoadedAt > 5000) {
+    _credResolver = makeCredentialResolver();
+    _credLoadedAt = Date.now();
+  }
+  return _credResolver;
+}
 
 // Map each non-skill tool name to its executor. Platform tools take (name, args, client);
 // skill tools take (name, args, ctx) and are dispatched separately below.
@@ -55,6 +70,7 @@ for (const t of PLATFORM_TOOLS) PLATFORM_EXECUTORS[t.name] = executePlatformTool
 const SKILL_TOOL_NAMES = new Set(SKILL_TOOLS.map((t) => t.name));
 const ORCHESTRATION_TOOL_NAMES = new Set(ORCHESTRATION_TOOLS.map((t) => t.name));
 const CLIENT_TOOL_NAMES = new Set(CLIENT_TOOLS.map((t) => t.name));
+const CREDENTIALS_TOOL_NAMES = new Set(CREDENTIALS_TOOLS.map((t) => t.name));
 
 /**
  * @param {object} ctx
@@ -224,6 +240,15 @@ export function createMcpServer(ctx) {
         result = await executeClientTool(name, args || {}, ctx, {
           clients: accessible,
           resolveClientId: makeResolveClientId(user, accessible)
+        });
+      } else if (CREDENTIALS_TOOL_NAMES.has(name)) {
+        // Tool-credential status is membership-gated like client memory: resolve the
+        // caller's client, then report that client's per-tool credential status (no secrets).
+        const accessible = await getAccessibleClients(user);
+        result = await executeCredentialsTool(name, args || {}, ctx, {
+          clients: accessible,
+          resolveClientId: makeResolveClientId(user, accessible),
+          credentials: credentialResolver()
         });
       } else {
         const executor = PLATFORM_EXECUTORS[name];
