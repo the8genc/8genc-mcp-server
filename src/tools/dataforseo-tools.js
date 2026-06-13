@@ -60,7 +60,7 @@ export async function executeDataForSEOTool(name, args = {}, _ctx, deps = {}) {
   const clientId = resolved.clientId;
 
   // ── Resolve credentials for THIS client (the whole point of the integration) ──
-  const session = credentials.resolveForClient(clientId, ['dataforseo']);
+  const session = await credentials.resolveForClient(clientId, ['dataforseo']);
   const unavailable = session.unavailable.find((u) => u.token === 'dataforseo');
   if (unavailable) {
     return { error: `DataForSEO is not connected for this client. ${unavailable.reason}` };

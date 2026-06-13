@@ -48,7 +48,7 @@ export async function executeCredentialsTool(name, args = {}, _ctx, deps = {}) {
   }
   const clientId = resolved.clientId;
 
-  const tools = credentials.statusForClient(clientId).map((t) => {
+  const tools = (await credentials.statusForClient(clientId)).map((t) => {
     const connected = t.available;
     const status =
       t.policy === 'shared'

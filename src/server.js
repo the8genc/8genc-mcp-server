@@ -23,7 +23,7 @@ import { ORCHESTRATION_TOOLS, executeOrchestrationTool } from './tools/orchestra
 import { CLIENT_TOOLS, executeClientTool } from './tools/client-tools.js';
 import { CREDENTIALS_TOOLS, executeCredentialsTool } from './tools/credentials-tools.js';
 import { DATAFORSEO_TOOLS, executeDataForSEOTool } from './tools/dataforseo-tools.js';
-import { makeCredentialResolver } from './credentials/resolver.js';
+import { makeDbCredentialResolver } from './credentials/resolver.js';
 import {
   resolveUser,
   isAdmin,
@@ -58,7 +58,7 @@ let _credResolver = null;
 let _credLoadedAt = 0;
 function credentialResolver() {
   if (!_credResolver || Date.now() - _credLoadedAt > 5000) {
-    _credResolver = makeCredentialResolver();
+    _credResolver = makeDbCredentialResolver();
     _credLoadedAt = Date.now();
   }
   return _credResolver;
