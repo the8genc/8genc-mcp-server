@@ -12,7 +12,10 @@
     "migrate": "node src/db/migrate.js",
     "build": "npm --prefix web ci && npm --prefix web run build",
     "build:web": "npm --prefix web run build",
-    "test": "node --test tests/*.test.js",
+    "skills:sync": "node scripts/sync-skill-catalog.mjs",
+    "skills:render": "node scripts/render-skills.mjs",
+    "skills:check": "node scripts/render-skills.mjs --check",
+    "test": "npm run skills:check && node --test tests/*.test.js",
     "test:coverage": "c8 node --test tests/*.test.js"
   },
   "keywords": [

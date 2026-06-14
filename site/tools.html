@@ -1,25 +1,25 @@
-<!-- @dsCard group="MCP Site" viewport="1280x900" name="Tools — Capability catalog" subtitle="All 8 tools, the skills library, and 22 AINative services" -->
+<!-- @dsCard group="MCP Site" viewport="1280x900" name="Tools — Capability catalog" subtitle="All 16 tools, 78 Agent Skills across 4 levels, and 22 AINative services" -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>8genC MCP · Capability Catalog</title>
-<meta name="description" content="The full 8genC MCP capability catalog — 8 tools across platform discovery and Agent Skills, 22 AINative services, and the GitHub-backed skills library." />
+<meta name="description" content="The full 8genC MCP capability catalog — 16 tools, 78 Agent Skills across 4 levels of operation, 22 AINative services, and the GitHub-backed skills library." />
 <link rel="icon" type="image/png" href="/assets/8genc-logomark-black.png" />
 <link rel="apple-touch-icon" href="/assets/8genc-logomark-black.png" />
 <!-- Open Graph / social share cards -->
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="8genC MCP" />
 <meta property="og:title" content="8genC MCP · Capability Catalog" />
-<meta property="og:description" content="The full 8genC MCP capability catalog — 8 tools across platform discovery and Agent Skills, 22 AINative services, and the GitHub-backed skills library." />
+<meta property="og:description" content="The full 8genC MCP capability catalog — 16 tools, 78 Agent Skills across 4 levels of operation, 22 AINative services, and the GitHub-backed skills library." />
 <meta property="og:url" content="https://mcp.8genc.com/tools" />
 <meta property="og:image" content="https://mcp.8genc.com/assets/og-hero.png" />
 <meta property="og:image:width" content="4800" />
 <meta property="og:image:height" content="2520" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="8genC MCP · Capability Catalog" />
-<meta name="twitter:description" content="8 tools, 22 AINative services, and the GitHub-backed Agent Skills library — over Model Context Protocol." />
+<meta name="twitter:description" content="16 tools, 78 Agent Skills across 4 levels, and 22 AINative services — over Model Context Protocol." />
 <meta name="twitter:image" content="https://mcp.8genc.com/assets/og-hero.png" />
 <!-- MCP discovery (Agent Experience) -->
 <link rel="mcp-server" href="https://mcp.8genc.com/mcp" />
@@ -64,11 +64,11 @@
   <div class="container">
     <span class="kicker">Capability Catalog</span>
     <h1 class="display doc-hero__title">Everything on the channel</h1>
-    <p class="lede">Eight tools, two capability groups, and a live library of Agent Skills — plus the full AINative platform the server has ground truth on.</p>
+    <p class="lede">Sixteen tools across five groups, an operating system of 78 Agent Skills in four levels, and the full AINative platform the server has ground truth on — all RBAC-scoped, per client.</p>
     <div class="catstats">
-      <div class="catstat"><span class="catstat__n">8</span><span class="catstat__l mono">MCP Tools</span></div>
+      <div class="catstat"><span class="catstat__n">16</span><span class="catstat__l mono">MCP Tools</span></div>
       <div class="catstat"><span class="catstat__n">22</span><span class="catstat__l mono">Platform Services</span></div>
-      <div class="catstat"><span class="catstat__n">2</span><span class="catstat__l mono">Agent Skills</span></div>
+      <div class="catstat"><span class="catstat__n">78</span><span class="catstat__l mono">Agent Skills</span></div>
     </div>
   </div>
 </section>
@@ -132,6 +132,44 @@
         </div>
       </div>
 
+      <div class="catgroup">
+        <div class="catgroup__head">
+          <span class="kicker kicker--bare signal">// Group C</span>
+          <h2 class="h-section">Orchestration</h2>
+          <p class="muted">Resolve the skills into a parallel + dependent execution plan. RBAC-scoped to the skills you can access.</p>
+        </div>
+        <div class="toollist">
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">orchestration_manifests</code><p class="toolrow__desc">The machine-readable handoff graph (consumes/produces/tools/gates) for your accessible skills.</p></div><div class="toolrow__meta"><span class="tag">read</span><span class="tag">rbac</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">orchestration_plan</code><p class="toolrow__desc">Resolve a goal or subset into parallel levels + per-node dependency contracts.</p></div><div class="toolrow__meta"><span class="tag">reason</span><span class="tag">rbac</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">orchestration_guide</code><p class="toolrow__desc">The orchestration spec + how to run it in your authenticated context.</p></div><div class="toolrow__meta"><span class="tag">read</span></div></article>
+        </div>
+      </div>
+
+      <div class="catgroup">
+        <div class="catgroup__head">
+          <span class="kicker kicker--bare signal">// Group D</span>
+          <h2 class="h-section">Client memory</h2>
+          <p class="muted">Per-client shared context (ZeroDB), walled off by membership. Auto-injected into skill prompts.</p>
+        </div>
+        <div class="toollist">
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">client_list</code><p class="toolrow__desc">The client tenants you can access.</p></div><div class="toolrow__meta"><span class="tag">read</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">client_memory_store</code><p class="toolrow__desc">Persist context to a client's shared memory — carries across sessions for all its members.</p></div><div class="toolrow__meta"><span class="tag">write</span><span class="tag">membership</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">client_memory_search</code><p class="toolrow__desc">Recall a client's shared memory by query.</p></div><div class="toolrow__meta"><span class="tag">search</span><span class="tag">membership</span></div></article>
+        </div>
+      </div>
+
+      <div class="catgroup">
+        <div class="catgroup__head">
+          <span class="kicker kicker--bare signal">// Group E</span>
+          <h2 class="h-section">Tool credentials</h2>
+          <p class="muted">Per-client API keys. <code>shared</code> uses the agency key; <code>client-owned</code> stays the client's — never crossed.</p>
+        </div>
+        <div class="toollist">
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">tool_credentials_status</code><p class="toolrow__desc">Per-tool policy (shared / client-owned) + connected state for your client. No secrets.</p></div><div class="toolrow__meta"><span class="tag">read</span><span class="tag">membership</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">dataforseo_search_volume</code><p class="toolrow__desc">Google Ads search volume / CPC / competition via DataForSEO, using your client's credentials.</p></div><div class="toolrow__meta"><span class="tag">live</span><span class="tag">membership</span></div></article>
+        </div>
+      </div>
+
       <div class="callout callout--info">
         <i data-lucide="sparkles"></i>
         <p>Every skill is also exposed as an <strong>MCP prompt</strong> — each shows up as a selectable prompt named by its slug, with an optional <code>input</code> argument for the task to apply it to.</p>
@@ -157,35 +195,158 @@
 
     <!-- ===== SKILLS ===== -->
     <div data-tab-panel="skills" hidden>
+      <!-- SKILLS:START — generated by scripts/render-skills.mjs from src/site/skills-catalog.json. Do not edit by hand. -->
+
       <div class="catgroup__head">
         <span class="kicker kicker--bare signal">// the8genc/ai-8gent-skills</span>
-        <h2 class="h-section">The skills library</h2>
-        <p class="muted">Reusable patterns — architecture, SOPs, autonomous platform builds. Authored in GitHub, loaded over MCP.</p>
+        <h2 class="h-section">An operating system of 78 Agent Skills</h2>
+        <p class="muted">Four levels of operation, mirroring 8genC's service areas: a top <strong>service area</strong> routes to a <strong>category lead</strong>, which orchestrates <strong>sub-agents</strong> and <strong>task agents</strong>. Authored in GitHub, served live over MCP.</p>
       </div>
       <div class="skilllist">
         <article class="skillcard">
-          <div class="skillcard__head"><code class="skillcard__slug">agentic-platform-builder</code><span class="chip chip--signal">Build</span></div>
-          <p class="skillcard__desc">Turns any business idea, SOP, or workflow into a complete multi-agent TypeScript/Node system — with a Coda data layer, test infrastructure, and GitHub CI/CD.</p>
-          <ul class="skillcard__refs mono">
-            <li>intake-questions · agent-patterns</li>
-            <li>coda-schema-patterns · implementation-patterns</li>
-            <li>testing-patterns · github-patterns</li>
-          </ul>
+          <div class="skillcard__head"><code class="skillcard__slug">L0</code><span class="chip chip--signal">Service area</span></div>
+          <p class="skillcard__desc">Top orchestrator for a discipline — triages an engagement and routes it to a category lead.</p>
         </article>
         <article class="skillcard">
-          <div class="skillcard__head"><code class="skillcard__slug">prd-generator</code><span class="chip chip--info">Author</span></div>
-          <p class="skillcard__desc">The full PRD workflow as a declarative skill: intake → template → discover services → generate → validate → score → verify API refs → persist. Carries 3 templates and a 15-rule rubric.</p>
-          <ul class="skillcard__refs mono">
-            <li>orchestrates prd_suggest_stack / prd_get_api_catalog</li>
-            <li>persists via ZeroDB memory tools</li>
-            <li>load with · skill_get prd-generator</li>
-          </ul>
+          <div class="skillcard__head"><code class="skillcard__slug">L1</code><span class="chip chip--info">Category lead</span></div>
+          <p class="skillcard__desc">Owns a category, sets the strategy, and orchestrates its sub-agents.</p>
+        </article>
+        <article class="skillcard">
+          <div class="skillcard__head"><code class="skillcard__slug">L2</code><span class="chip chip--ok">Sub-agent</span></div>
+          <p class="skillcard__desc">A specific job — produces one typed artifact and dispatches its task agent.</p>
+        </article>
+        <article class="skillcard">
+          <div class="skillcard__head"><code class="skillcard__slug">L3</code><span class="chip chip--warn">Task agent</span></div>
+          <p class="skillcard__desc">One focused task with a deliberately limited toolset.</p>
         </article>
       </div>
-      <div class="callout callout--info">
-        <i data-lucide="git-branch"></i>
-        <p>Source of truth is the GitHub repo, laid out as <code>skills/&lt;slug&gt;/SKILL.md</code> + <code>references/*.md</code>. Edit there, then <code>skill_sync</code> to refresh the ZeroDB mirror.</p>
+      <div class="catgroup">
+        <div class="catgroup__head">
+          <span class="kicker kicker--bare signal">// Business</span>
+          <h2 class="h-section">Business</h2>
+          <p class="muted">16 skills — a service area that orchestrates its category leads, sub-agents, and task agents.</p>
+        </div>
+        <div class="toollist">
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-business</code><p class="toolrow__desc">Business orchestrator: strategy, growth, partnerships, M&amp;A, operations, innovation → routes to its category leads</p></div><div class="toolrow__meta"><span class="tag">L0 · service area</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-business-development</code><p class="toolrow__desc">Partnerships, alliances, BD pipeline, and new revenue lines</p></div><div class="toolrow__meta"><span class="tag">L1 · category lead</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-corporate-finance-ma</code><p class="toolrow__desc">Fundraising, financial modeling, M&amp;A, and due diligence</p></div><div class="toolrow__meta"><span class="tag">L1 · category lead</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-innovation-design</code><p class="toolrow__desc">Innovation programs, new ventures, and design-thinking facilitation</p></div><div class="toolrow__meta"><span class="tag">L1 · category lead</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-operational-strategy</code><p class="toolrow__desc">Process, org design, operational efficiency, and scaling</p></div><div class="toolrow__meta"><span class="tag">L1 · category lead</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-strategic-planning</code><p class="toolrow__desc">Company strategy, vision, OKRs, and planning cycles</p></div><div class="toolrow__meta"><span class="tag">L1 · category lead</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-financial-modeler</code><p class="toolrow__desc">Builds a driver-based financial-model (P&amp;L, cash/runway, scenarios); dispatches the valuation task agent</p></div><div class="toolrow__meta"><span class="tag">L2 · sub-agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-okr-builder</code><p class="toolrow__desc">Turns strategic priorities into an okr-set (objectives, owners, key results); dispatches the metric-definer task agent</p></div><div class="toolrow__meta"><span class="tag">L2 · sub-agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-opportunity-scout</code><p class="toolrow__desc">Maps a ranked opportunity-map (jobs-to-be-done, unmet needs); dispatches the concept-sketcher task agent</p></div><div class="toolrow__meta"><span class="tag">L2 · sub-agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-partner-sourcer</code><p class="toolrow__desc">Builds a ranked partner-shortlist (fit/effort/value, value exchange); dispatches the partner-researcher task agent</p></div><div class="toolrow__meta"><span class="tag">L2 · sub-agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-process-designer</code><p class="toolrow__desc">Maps a core process into a process-map (steps, owners, handoffs, bottleneck); dispatches the SOP-writer task agent</p></div><div class="toolrow__meta"><span class="tag">L2 · sub-agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-concept-sketcher</code><p class="toolrow__desc">Shapes one opportunity into a testable concept — value prop, riskiest assumption, cheapest test (limited tools)</p></div><div class="toolrow__meta"><span class="tag">L3 · task agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-kr-metric-definer</code><p class="toolrow__desc">Defines the exact metric for one key result — baseline, target, cadence, source (limited tools)</p></div><div class="toolrow__meta"><span class="tag">L3 · task agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-partner-researcher</code><p class="toolrow__desc">Researches one candidate partner into a firmographic profile (limited tools)</p></div><div class="toolrow__meta"><span class="tag">L3 · task agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-sop-writer</code><p class="toolrow__desc">Writes the runnable SOP for one process step — trigger, actions, owner, checks (limited tools)</p></div><div class="toolrow__meta"><span class="tag">L3 · task agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-valuation-analyst</code><p class="toolrow__desc">Runs one valuation method (DCF/comps/precedents) into a defensible value (limited tools)</p></div><div class="toolrow__meta"><span class="tag">L3 · task agent</span></div></article>
+        </div>
       </div>
+      <div class="catgroup">
+        <div class="catgroup__head">
+          <span class="kicker kicker--bare signal">// Technology</span>
+          <h2 class="h-section">Technology</h2>
+          <p class="muted">19 skills — a service area that orchestrates its category leads, sub-agents, and task agents.</p>
+        </div>
+        <div class="toollist">
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-technology</code><p class="toolrow__desc">Technology orchestrator: product strategy, AI/ML, software dev+QA, product design, data analytics</p></div><div class="toolrow__meta"><span class="tag">L0 · service area</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-ai-ml-dev</code><p class="toolrow__desc">Models, ML pipelines, AI features, and evaluations</p></div><div class="toolrow__meta"><span class="tag">L1 · category lead</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-data-analytics</code><p class="toolrow__desc">Instrumentation, dashboards, analysis, and insight delivery</p></div><div class="toolrow__meta"><span class="tag">L1 · category lead</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-designer</code><p class="toolrow__desc">Design lead/orchestrator: creative &amp; art direction (briefs, UX, UI structure &amp; tokens, brand, audits) — and dispatches hands-on work to the claude / figma / canva design sub-agents</p></div><div class="toolrow__meta"><span class="tag">L1 · category lead</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-platform-builder</code><p class="toolrow__desc">Turns any business idea, SOP, or workflow into a complete multi-agent TypeScript/Node system with Coda data layer, test infrastructure, and GitHub CI/CD</p></div><div class="toolrow__meta"><span class="tag">L1 · category lead</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-product-manager</code><p class="toolrow__desc">Product management end to end: strategy, vision, personas, journey, user stories, PRD, GTM, and metrics → Coda workspace</p></div><div class="toolrow__meta"><span class="tag">L1 · category lead</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-web-dev</code><p class="toolrow__desc">Web-dev lead/orchestrator: implements the PM + designer outputs as a live site, picking the platform and dispatching to the framer / squarespace sub-agents — and gating publish on the web-qa verifier</p></div><div class="toolrow__meta"><span class="tag">L1 · category lead</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-canva-designer</code><p class="toolrow__desc">Connects to Canva to analyze existing work and create new/on-brand designs via the Canva Connect API</p></div><div class="toolrow__meta"><span class="tag">L2 · sub-agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-claude-designer</code><p class="toolrow__desc">Human-in-the-loop UI design loop that drives claude.ai/design to produce tasteable variants and a code handoff</p></div><div class="toolrow__meta"><span class="tag">L2 · sub-agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-figma-designer</code><p class="toolrow__desc">Connects to Figma to ingest/analyze existing files (REST) and author new design via generated Figma plugin code</p></div><div class="toolrow__meta"><span class="tag">L2 · sub-agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-framer-dev</code><p class="toolrow__desc">Two surfaces — Server-API client builds (layout, React components, CMS, publish) and internal unframer-MCP ops on the firm's live Framer portfolio (grounded in the8genc/design-8gents)</p></div><div class="toolrow__meta"><span class="tag">L2 · sub-agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-metrics-modeler</code><p class="toolrow__desc">Builds an analytics-model (tracking plan + metric layer); dispatches the dashboard-spec task agent</p></div><div class="toolrow__meta"><span class="tag">L2 · sub-agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-ml-prototyper</code><p class="toolrow__desc">Specs an ML capability into an ml-spec (data, approach, baseline, metrics); dispatches the eval-harness task agent</p></div><div class="toolrow__meta"><span class="tag">L2 · sub-agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-pos-manager</code><p class="toolrow__desc">Manages a client's Square POS account via the Square Node SDK — catalog, inventory, orders, payments, customers; each client adds their own API keys in a settings/dashboard step</p></div><div class="toolrow__meta"><span class="tag">L2 · sub-agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-prd</code><p class="toolrow__desc">Generates, validates, scores, refines, and persists production-ready PRDs for AINative features and agent capabilities</p></div><div class="toolrow__meta"><span class="tag">L2 · sub-agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-squarespace-dev</code><p class="toolrow__desc">Develops a Squarespace site: editor build, Custom CSS + code injection, and Commerce APIs for store data</p></div><div class="toolrow__meta"><span class="tag">L2 · sub-agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-dashboard-spec-writer</code><p class="toolrow__desc">Specs one dashboard for an audience — decision, metrics, comparisons, drill-downs (limited tools)</p></div><div class="toolrow__meta"><span class="tag">L3 · task agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-eval-harness-builder</code><p class="toolrow__desc">Designs the eval harness for one model — eval set, metrics, slices, ship bar (limited tools)</p></div><div class="toolrow__meta"><span class="tag">L3 · task agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-web-qa</code><p class="toolrow__desc">Pre-publish QA gate: drives chrome-devtools-mcp + Puppeteer over the staged site — design fidelity, functional flows, console/network, a11y/perf — returns a pass/fail report (limited tools)</p></div><div class="toolrow__meta"><span class="tag">L3 · task agent</span></div></article>
+        </div>
+      </div>
+      <div class="catgroup">
+        <div class="catgroup__head">
+          <span class="kicker kicker--bare signal">// Marketing</span>
+          <h2 class="h-section">Marketing</h2>
+          <p class="muted">30 skills — a service area that orchestrates its category leads, sub-agents, and task agents.</p>
+        </div>
+        <div class="toollist">
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-marketing</code><p class="toolrow__desc">Marketing orchestrator: brand, content, growth, events, digital, quant marketing</p></div><div class="toolrow__meta"><span class="tag">L0 · service area</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-brand-strategy</code><p class="toolrow__desc">Positioning, identity, brand architecture, and messaging</p></div><div class="toolrow__meta"><span class="tag">L1 · category lead</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-content-writer</code><p class="toolrow__desc">Writes SEO articles, applies on-page craft (quality, links, schema, images), and publishes to WordPress, Ghost, or Framer</p></div><div class="toolrow__meta"><span class="tag">L1 · category lead</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-digital-strategy</code><p class="toolrow__desc">Channels, web, martech, and digital presence</p></div><div class="toolrow__meta"><span class="tag">L1 · category lead</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-events-experiences</code><p class="toolrow__desc">Events, activations, and experiential marketing</p></div><div class="toolrow__meta"><span class="tag">L1 · category lead</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-paid-media</code><p class="toolrow__desc">DataForSEO-grounded search acquisition: keyword/competitive/organic/answer-engine research, media plans, and campaign build</p></div><div class="toolrow__meta"><span class="tag">L1 · category lead</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-quant-marketing</code><p class="toolrow__desc">Measurement, attribution, MMM, and marketing analytics</p></div><div class="toolrow__meta"><span class="tag">L1 · category lead</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-aeo-auditor</code><p class="toolrow__desc">Programmatic answer-engine (LLM) discoverability audit → an aeo-audit (AEO Readiness Score, fixes, JSON-LD); dispatches the 5 AEO task agents</p></div><div class="toolrow__meta"><span class="tag">L2 · sub-agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-attribution-modeler</code><p class="toolrow__desc">Builds an attribution-model (method, ROI by channel, assumptions); dispatches the experiment-designer task agent</p></div><div class="toolrow__meta"><span class="tag">L2 · sub-agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-brand-architect</code><p class="toolrow__desc">Builds a brand-platform (positioning, values, personality, pillars, voice); dispatches the naming task agent</p></div><div class="toolrow__meta"><span class="tag">L2 · sub-agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-channel-planner</code><p class="toolrow__desc">Builds a channel-plan (channel roles, budget split, KPIs); dispatches the funnel-mapper task agent</p></div><div class="toolrow__meta"><span class="tag">L2 · sub-agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-content-strategist</code><p class="toolrow__desc">Builds a content-strategy (pillars, intent, cadence, distribution, measurement); dispatches the content-brief task agent</p></div><div class="toolrow__meta"><span class="tag">L2 · sub-agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-creative-strategist</code><p class="toolrow__desc">Paid-social creative strategy (Motion method) → creative-strategy (diagnosis, personas both ways, evidence-ranked roadmap) + scored ad-creative units; dispatches the 4 creative task agents</p></div><div class="toolrow__meta"><span class="tag">L2 · sub-agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-event-planner</code><p class="toolrow__desc">Builds an event-plan (objective, format, experience beats, budget, KPIs); dispatches the run-of-show task agent</p></div><div class="toolrow__meta"><span class="tag">L2 · sub-agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-growth-strategist</code><p class="toolrow__desc">Builds a growth-model (north-star, AARRR funnel + levers, loops, experiment backlog); dispatches the growth-experiment task agent</p></div><div class="toolrow__meta"><span class="tag">L2 · sub-agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-ad-builder</code><p class="toolrow__desc">Recipe-card copy scored to 90+ (Copy-Editor veto) → image-gen prompt; clone + animate modes (limited tools)</p></div><div class="toolrow__meta"><span class="tag">L3 · task agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-ad-researcher</code><p class="toolrow__desc">7-phase brand extraction → research brief + Brand Spec / Visual Style cards (limited tools)</p></div><div class="toolrow__meta"><span class="tag">L3 · task agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-citation-checker</code><p class="toolrow__desc">Cross-references NAP across Yelp/Facebook/directories for errors (limited tools)</p></div><div class="toolrow__meta"><span class="tag">L3 · task agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-consensus-scanner</code><p class="toolrow__desc">Top-10 local-directory consensus share vs competitors (limited tools)</p></div><div class="toolrow__meta"><span class="tag">L3 · task agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-content-brief-writer</code><p class="toolrow__desc">Briefs one topic — angle, keywords, intent, outline, word-count floor, internal links (limited tools)</p></div><div class="toolrow__meta"><span class="tag">L3 · task agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-creative-analyst</code><p class="toolrow__desc">Spend-gated metric read (thumbstop, hold, retention, CTR) → iterate/scale/kill verdicts (limited tools)</p></div><div class="toolrow__meta"><span class="tag">L3 · task agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-experiment-designer</code><p class="toolrow__desc">Designs one incrementality test — hypothesis, method, power calc, read-out (limited tools)</p></div><div class="toolrow__meta"><span class="tag">L3 · task agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-funnel-mapper</code><p class="toolrow__desc">Maps one channel's funnel stage by stage — KPI, conversion rate, top lever (limited tools)</p></div><div class="toolrow__meta"><span class="tag">L3 · task agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-growth-experiment-designer</code><p class="toolrow__desc">Designs one growth experiment — metric, MDE, sample/duration, guardrails, decision rule (limited tools)</p></div><div class="toolrow__meta"><span class="tag">L3 · task agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-hook-builder</code><p class="toolrow__desc">Hook boards: generate + grade hooks across the 3 layers for one persona/angle (limited tools)</p></div><div class="toolrow__meta"><span class="tag">L3 · task agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-naming-generator</code><p class="toolrow__desc">Generates + screens names for one brief — distinctiveness, domain/trademark risk (limited tools)</p></div><div class="toolrow__meta"><span class="tag">L3 · task agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-review-analyzer</code><p class="toolrow__desc">Keyword-frequency + sentiment read of public review text (limited tools)</p></div><div class="toolrow__meta"><span class="tag">L3 · task agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-run-of-show-builder</code><p class="toolrow__desc">Builds one event's minute-by-minute run-of-show — segments, owners, cues (limited tools)</p></div><div class="toolrow__meta"><span class="tag">L3 · task agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-schema-generator</code><p class="toolrow__desc">Drafts the missing JSON-LD LocalBusiness schema template (limited tools)</p></div><div class="toolrow__meta"><span class="tag">L3 · task agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-schema-inspector</code><p class="toolrow__desc">Scrapes site HTML, verifies JSON-LD LocalBusiness, maps semantic gaps (limited tools)</p></div><div class="toolrow__meta"><span class="tag">L3 · task agent</span></div></article>
+        </div>
+      </div>
+      <div class="catgroup">
+        <div class="catgroup__head">
+          <span class="kicker kicker--bare signal">// Sales</span>
+          <h2 class="h-section">Sales</h2>
+          <p class="muted">13 skills — a service area that orchestrates its category leads, sub-agents, and task agents.</p>
+        </div>
+        <div class="toollist">
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-sales</code><p class="toolrow__desc">Sales orchestrator: sales strategy, GTM, account management, sales enablement</p></div><div class="toolrow__meta"><span class="tag">L0 · service area</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-account-management</code><p class="toolrow__desc">Post-sale management, expansion, retention, and QBRs</p></div><div class="toolrow__meta"><span class="tag">L1 · category lead</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-gtm-strategy</code><p class="toolrow__desc">Launch, ICP, positioning-to-pipeline, and channel strategy</p></div><div class="toolrow__meta"><span class="tag">L1 · category lead</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-sales-enablement</code><p class="toolrow__desc">Playbooks, collateral, training, and CRM/process tooling</p></div><div class="toolrow__meta"><span class="tag">L1 · category lead</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-sales-strategy</code><p class="toolrow__desc">Revenue model, segmentation, sales motion, and quota/territory</p></div><div class="toolrow__meta"><span class="tag">L1 · category lead</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-account-planner</code><p class="toolrow__desc">Builds an account-plan (health, stakeholders, risks, expansion path); dispatches the QBR task agent</p></div><div class="toolrow__meta"><span class="tag">L2 · sub-agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-icp-builder</code><p class="toolrow__desc">Builds the ICP (segments, triggers, fit) from market signals; dispatches the lead-list task agent</p></div><div class="toolrow__meta"><span class="tag">L2 · sub-agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-playbook-builder</code><p class="toolrow__desc">Builds a sales-playbook (stages, qualification, talk tracks, objections); dispatches the battlecard task agent</p></div><div class="toolrow__meta"><span class="tag">L2 · sub-agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-territory-planner</code><p class="toolrow__desc">Builds a sales-plan (segments, territories, coverage model); dispatches the quota-modeler task agent</p></div><div class="toolrow__meta"><span class="tag">L2 · sub-agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-battlecard-writer</code><p class="toolrow__desc">Writes one competitor/objection battlecard — their pitch, our wedge, landmines (limited tools)</p></div><div class="toolrow__meta"><span class="tag">L3 · task agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-lead-list-builder</code><p class="toolrow__desc">Sources a target lead/account list for one ICP segment (limited tools)</p></div><div class="toolrow__meta"><span class="tag">L3 · task agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-qbr-builder</code><p class="toolrow__desc">Builds one account's QBR — value delivered, health, roadmap, the ask (limited tools)</p></div><div class="toolrow__meta"><span class="tag">L3 · task agent</span></div></article>
+          <article class="toolrow ticks"><span class="tick-tr"></span><span class="tick-br"></span><div class="toolrow__main"><code class="toolrow__name">8gentic-quota-modeler</code><p class="toolrow__desc">Models one territory's quota bottom-up — capacity, productivity, pipeline coverage (limited tools)</p></div><div class="toolrow__meta"><span class="tag">L3 · task agent</span></div></article>
+        </div>
+      </div>
+      <div class="callout callout--info">
+        <i data-lucide="sparkles"></i>
+        <p>A skill is a <strong>discipline an agent loads to act</strong>, not code that runs itself. Find one with <code>skill_search</code>, load it with <code>skill_get &lt;slug&gt;</code> (or select the same-named <strong>MCP prompt</strong>), and let <code>orchestration_plan</code> resolve a multi-skill engagement into parallel + dependent levels. Access is RBAC-scoped, with per-client memory + credentials.</p>
+      </div>
+      <div class="codeblock" style="margin-top:var(--space-5)">
+        <div class="codeblock__bar"><span class="codeblock__label">Use a skill over MCP</span></div>
+        <pre class="codeblock__body">{ "tool": "skill_search", "arguments": { "query": "build a go-to-market plan" } }
+{ "tool": "skill_get", "arguments": { "skill": "8gentic-gtm-strategy" } }
+{ "tool": "orchestration_plan", "arguments": { "goals": ["icp", "sales-playbook"] } }
+// or select the MCP prompt named  8gentic-gtm-strategy  with your task as input</pre>
+      </div>
+      
+      <!-- SKILLS:END -->
     </div>
   </div>
 </section>

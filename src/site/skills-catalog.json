@@ -1,0 +1,600 @@
+{
+  "repo": "the8genc/ai-8gent-skills",
+  "total": 78,
+  "areas": [
+    {
+      "key": "business",
+      "name": "Business"
+    },
+    {
+      "key": "technology",
+      "name": "Technology"
+    },
+    {
+      "key": "marketing",
+      "name": "Marketing"
+    },
+    {
+      "key": "sales",
+      "name": "Sales"
+    }
+  ],
+  "levels": [
+    {
+      "n": 0,
+      "name": "Service area",
+      "plural": "Service areas",
+      "blurb": "Top orchestrator for a discipline — triages an engagement and routes it to a category lead.",
+      "count": 4
+    },
+    {
+      "n": 1,
+      "name": "Category lead",
+      "plural": "Category leads",
+      "blurb": "Owns a category, sets the strategy, and orchestrates its sub-agents.",
+      "count": 21
+    },
+    {
+      "n": 2,
+      "name": "Sub-agent",
+      "plural": "Sub-agents",
+      "blurb": "A specific job — produces one typed artifact and dispatches its task agent.",
+      "count": 26
+    },
+    {
+      "n": 3,
+      "name": "Task agent",
+      "plural": "Task agents",
+      "blurb": "One focused task with a deliberately limited toolset.",
+      "count": 27
+    }
+  ],
+  "skills": [
+    {
+      "slug": "8gentic-business",
+      "area": "business",
+      "level": 0,
+      "parent": null,
+      "desc": "Business orchestrator: strategy, growth, partnerships, M&A, operations, innovation → routes to its category leads"
+    },
+    {
+      "slug": "8gentic-business-development",
+      "area": "business",
+      "level": 1,
+      "parent": null,
+      "desc": "Partnerships, alliances, BD pipeline, and new revenue lines"
+    },
+    {
+      "slug": "8gentic-corporate-finance-ma",
+      "area": "business",
+      "level": 1,
+      "parent": null,
+      "desc": "Fundraising, financial modeling, M&A, and due diligence"
+    },
+    {
+      "slug": "8gentic-innovation-design",
+      "area": "business",
+      "level": 1,
+      "parent": null,
+      "desc": "Innovation programs, new ventures, and design-thinking facilitation"
+    },
+    {
+      "slug": "8gentic-operational-strategy",
+      "area": "business",
+      "level": 1,
+      "parent": null,
+      "desc": "Process, org design, operational efficiency, and scaling"
+    },
+    {
+      "slug": "8gentic-strategic-planning",
+      "area": "business",
+      "level": 1,
+      "parent": null,
+      "desc": "Company strategy, vision, OKRs, and planning cycles"
+    },
+    {
+      "slug": "8gentic-financial-modeler",
+      "area": "business",
+      "level": 2,
+      "parent": null,
+      "desc": "Builds a driver-based financial-model (P&L, cash/runway, scenarios); dispatches the valuation task agent"
+    },
+    {
+      "slug": "8gentic-okr-builder",
+      "area": "business",
+      "level": 2,
+      "parent": null,
+      "desc": "Turns strategic priorities into an okr-set (objectives, owners, key results); dispatches the metric-definer task agent"
+    },
+    {
+      "slug": "8gentic-opportunity-scout",
+      "area": "business",
+      "level": 2,
+      "parent": null,
+      "desc": "Maps a ranked opportunity-map (jobs-to-be-done, unmet needs); dispatches the concept-sketcher task agent"
+    },
+    {
+      "slug": "8gentic-partner-sourcer",
+      "area": "business",
+      "level": 2,
+      "parent": null,
+      "desc": "Builds a ranked partner-shortlist (fit/effort/value, value exchange); dispatches the partner-researcher task agent"
+    },
+    {
+      "slug": "8gentic-process-designer",
+      "area": "business",
+      "level": 2,
+      "parent": null,
+      "desc": "Maps a core process into a process-map (steps, owners, handoffs, bottleneck); dispatches the SOP-writer task agent"
+    },
+    {
+      "slug": "8gentic-concept-sketcher",
+      "area": "business",
+      "level": 3,
+      "parent": null,
+      "desc": "Shapes one opportunity into a testable concept — value prop, riskiest assumption, cheapest test (limited tools)"
+    },
+    {
+      "slug": "8gentic-kr-metric-definer",
+      "area": "business",
+      "level": 3,
+      "parent": null,
+      "desc": "Defines the exact metric for one key result — baseline, target, cadence, source (limited tools)"
+    },
+    {
+      "slug": "8gentic-partner-researcher",
+      "area": "business",
+      "level": 3,
+      "parent": null,
+      "desc": "Researches one candidate partner into a firmographic profile (limited tools)"
+    },
+    {
+      "slug": "8gentic-sop-writer",
+      "area": "business",
+      "level": 3,
+      "parent": null,
+      "desc": "Writes the runnable SOP for one process step — trigger, actions, owner, checks (limited tools)"
+    },
+    {
+      "slug": "8gentic-valuation-analyst",
+      "area": "business",
+      "level": 3,
+      "parent": null,
+      "desc": "Runs one valuation method (DCF/comps/precedents) into a defensible value (limited tools)"
+    },
+    {
+      "slug": "8gentic-marketing",
+      "area": "marketing",
+      "level": 0,
+      "parent": null,
+      "desc": "Marketing orchestrator: brand, content, growth, events, digital, quant marketing"
+    },
+    {
+      "slug": "8gentic-brand-strategy",
+      "area": "marketing",
+      "level": 1,
+      "parent": null,
+      "desc": "Positioning, identity, brand architecture, and messaging"
+    },
+    {
+      "slug": "8gentic-content-writer",
+      "area": "marketing",
+      "level": 1,
+      "parent": null,
+      "desc": "Writes SEO articles, applies on-page craft (quality, links, schema, images), and publishes to WordPress, Ghost, or Framer"
+    },
+    {
+      "slug": "8gentic-digital-strategy",
+      "area": "marketing",
+      "level": 1,
+      "parent": null,
+      "desc": "Channels, web, martech, and digital presence"
+    },
+    {
+      "slug": "8gentic-events-experiences",
+      "area": "marketing",
+      "level": 1,
+      "parent": null,
+      "desc": "Events, activations, and experiential marketing"
+    },
+    {
+      "slug": "8gentic-paid-media",
+      "area": "marketing",
+      "level": 1,
+      "parent": null,
+      "desc": "DataForSEO-grounded search acquisition: keyword/competitive/organic/answer-engine research, media plans, and campaign build"
+    },
+    {
+      "slug": "8gentic-quant-marketing",
+      "area": "marketing",
+      "level": 1,
+      "parent": null,
+      "desc": "Measurement, attribution, MMM, and marketing analytics"
+    },
+    {
+      "slug": "8gentic-aeo-auditor",
+      "area": "marketing",
+      "level": 2,
+      "parent": null,
+      "desc": "Programmatic answer-engine (LLM) discoverability audit → an aeo-audit (AEO Readiness Score, fixes, JSON-LD); dispatches the 5 AEO task agents"
+    },
+    {
+      "slug": "8gentic-attribution-modeler",
+      "area": "marketing",
+      "level": 2,
+      "parent": null,
+      "desc": "Builds an attribution-model (method, ROI by channel, assumptions); dispatches the experiment-designer task agent"
+    },
+    {
+      "slug": "8gentic-brand-architect",
+      "area": "marketing",
+      "level": 2,
+      "parent": null,
+      "desc": "Builds a brand-platform (positioning, values, personality, pillars, voice); dispatches the naming task agent"
+    },
+    {
+      "slug": "8gentic-channel-planner",
+      "area": "marketing",
+      "level": 2,
+      "parent": null,
+      "desc": "Builds a channel-plan (channel roles, budget split, KPIs); dispatches the funnel-mapper task agent"
+    },
+    {
+      "slug": "8gentic-content-strategist",
+      "area": "marketing",
+      "level": 2,
+      "parent": null,
+      "desc": "Builds a content-strategy (pillars, intent, cadence, distribution, measurement); dispatches the content-brief task agent"
+    },
+    {
+      "slug": "8gentic-creative-strategist",
+      "area": "marketing",
+      "level": 2,
+      "parent": null,
+      "desc": "Paid-social creative strategy (Motion method) → creative-strategy (diagnosis, personas both ways, evidence-ranked roadmap) + scored ad-creative units; dispatches the 4 creative task agents"
+    },
+    {
+      "slug": "8gentic-event-planner",
+      "area": "marketing",
+      "level": 2,
+      "parent": null,
+      "desc": "Builds an event-plan (objective, format, experience beats, budget, KPIs); dispatches the run-of-show task agent"
+    },
+    {
+      "slug": "8gentic-growth-strategist",
+      "area": "marketing",
+      "level": 2,
+      "parent": null,
+      "desc": "Builds a growth-model (north-star, AARRR funnel + levers, loops, experiment backlog); dispatches the growth-experiment task agent"
+    },
+    {
+      "slug": "8gentic-ad-builder",
+      "area": "marketing",
+      "level": 3,
+      "parent": null,
+      "desc": "Recipe-card copy scored to 90+ (Copy-Editor veto) → image-gen prompt; clone + animate modes (limited tools)"
+    },
+    {
+      "slug": "8gentic-ad-researcher",
+      "area": "marketing",
+      "level": 3,
+      "parent": null,
+      "desc": "7-phase brand extraction → research brief + Brand Spec / Visual Style cards (limited tools)"
+    },
+    {
+      "slug": "8gentic-citation-checker",
+      "area": "marketing",
+      "level": 3,
+      "parent": null,
+      "desc": "Cross-references NAP across Yelp/Facebook/directories for errors (limited tools)"
+    },
+    {
+      "slug": "8gentic-consensus-scanner",
+      "area": "marketing",
+      "level": 3,
+      "parent": null,
+      "desc": "Top-10 local-directory consensus share vs competitors (limited tools)"
+    },
+    {
+      "slug": "8gentic-content-brief-writer",
+      "area": "marketing",
+      "level": 3,
+      "parent": null,
+      "desc": "Briefs one topic — angle, keywords, intent, outline, word-count floor, internal links (limited tools)"
+    },
+    {
+      "slug": "8gentic-creative-analyst",
+      "area": "marketing",
+      "level": 3,
+      "parent": null,
+      "desc": "Spend-gated metric read (thumbstop, hold, retention, CTR) → iterate/scale/kill verdicts (limited tools)"
+    },
+    {
+      "slug": "8gentic-experiment-designer",
+      "area": "marketing",
+      "level": 3,
+      "parent": null,
+      "desc": "Designs one incrementality test — hypothesis, method, power calc, read-out (limited tools)"
+    },
+    {
+      "slug": "8gentic-funnel-mapper",
+      "area": "marketing",
+      "level": 3,
+      "parent": null,
+      "desc": "Maps one channel's funnel stage by stage — KPI, conversion rate, top lever (limited tools)"
+    },
+    {
+      "slug": "8gentic-growth-experiment-designer",
+      "area": "marketing",
+      "level": 3,
+      "parent": null,
+      "desc": "Designs one growth experiment — metric, MDE, sample/duration, guardrails, decision rule (limited tools)"
+    },
+    {
+      "slug": "8gentic-hook-builder",
+      "area": "marketing",
+      "level": 3,
+      "parent": null,
+      "desc": "Hook boards: generate + grade hooks across the 3 layers for one persona/angle (limited tools)"
+    },
+    {
+      "slug": "8gentic-naming-generator",
+      "area": "marketing",
+      "level": 3,
+      "parent": null,
+      "desc": "Generates + screens names for one brief — distinctiveness, domain/trademark risk (limited tools)"
+    },
+    {
+      "slug": "8gentic-review-analyzer",
+      "area": "marketing",
+      "level": 3,
+      "parent": null,
+      "desc": "Keyword-frequency + sentiment read of public review text (limited tools)"
+    },
+    {
+      "slug": "8gentic-run-of-show-builder",
+      "area": "marketing",
+      "level": 3,
+      "parent": null,
+      "desc": "Builds one event's minute-by-minute run-of-show — segments, owners, cues (limited tools)"
+    },
+    {
+      "slug": "8gentic-schema-generator",
+      "area": "marketing",
+      "level": 3,
+      "parent": null,
+      "desc": "Drafts the missing JSON-LD LocalBusiness schema template (limited tools)"
+    },
+    {
+      "slug": "8gentic-schema-inspector",
+      "area": "marketing",
+      "level": 3,
+      "parent": null,
+      "desc": "Scrapes site HTML, verifies JSON-LD LocalBusiness, maps semantic gaps (limited tools)"
+    },
+    {
+      "slug": "8gentic-sales",
+      "area": "sales",
+      "level": 0,
+      "parent": null,
+      "desc": "Sales orchestrator: sales strategy, GTM, account management, sales enablement"
+    },
+    {
+      "slug": "8gentic-account-management",
+      "area": "sales",
+      "level": 1,
+      "parent": null,
+      "desc": "Post-sale management, expansion, retention, and QBRs"
+    },
+    {
+      "slug": "8gentic-gtm-strategy",
+      "area": "sales",
+      "level": 1,
+      "parent": null,
+      "desc": "Launch, ICP, positioning-to-pipeline, and channel strategy"
+    },
+    {
+      "slug": "8gentic-sales-enablement",
+      "area": "sales",
+      "level": 1,
+      "parent": null,
+      "desc": "Playbooks, collateral, training, and CRM/process tooling"
+    },
+    {
+      "slug": "8gentic-sales-strategy",
+      "area": "sales",
+      "level": 1,
+      "parent": null,
+      "desc": "Revenue model, segmentation, sales motion, and quota/territory"
+    },
+    {
+      "slug": "8gentic-account-planner",
+      "area": "sales",
+      "level": 2,
+      "parent": null,
+      "desc": "Builds an account-plan (health, stakeholders, risks, expansion path); dispatches the QBR task agent"
+    },
+    {
+      "slug": "8gentic-icp-builder",
+      "area": "sales",
+      "level": 2,
+      "parent": null,
+      "desc": "Builds the ICP (segments, triggers, fit) from market signals; dispatches the lead-list task agent"
+    },
+    {
+      "slug": "8gentic-playbook-builder",
+      "area": "sales",
+      "level": 2,
+      "parent": null,
+      "desc": "Builds a sales-playbook (stages, qualification, talk tracks, objections); dispatches the battlecard task agent"
+    },
+    {
+      "slug": "8gentic-territory-planner",
+      "area": "sales",
+      "level": 2,
+      "parent": null,
+      "desc": "Builds a sales-plan (segments, territories, coverage model); dispatches the quota-modeler task agent"
+    },
+    {
+      "slug": "8gentic-battlecard-writer",
+      "area": "sales",
+      "level": 3,
+      "parent": null,
+      "desc": "Writes one competitor/objection battlecard — their pitch, our wedge, landmines (limited tools)"
+    },
+    {
+      "slug": "8gentic-lead-list-builder",
+      "area": "sales",
+      "level": 3,
+      "parent": null,
+      "desc": "Sources a target lead/account list for one ICP segment (limited tools)"
+    },
+    {
+      "slug": "8gentic-qbr-builder",
+      "area": "sales",
+      "level": 3,
+      "parent": null,
+      "desc": "Builds one account's QBR — value delivered, health, roadmap, the ask (limited tools)"
+    },
+    {
+      "slug": "8gentic-quota-modeler",
+      "area": "sales",
+      "level": 3,
+      "parent": null,
+      "desc": "Models one territory's quota bottom-up — capacity, productivity, pipeline coverage (limited tools)"
+    },
+    {
+      "slug": "8gentic-technology",
+      "area": "technology",
+      "level": 0,
+      "parent": null,
+      "desc": "Technology orchestrator: product strategy, AI/ML, software dev+QA, product design, data analytics"
+    },
+    {
+      "slug": "8gentic-ai-ml-dev",
+      "area": "technology",
+      "level": 1,
+      "parent": null,
+      "desc": "Models, ML pipelines, AI features, and evaluations"
+    },
+    {
+      "slug": "8gentic-data-analytics",
+      "area": "technology",
+      "level": 1,
+      "parent": null,
+      "desc": "Instrumentation, dashboards, analysis, and insight delivery"
+    },
+    {
+      "slug": "8gentic-designer",
+      "area": "technology",
+      "level": 1,
+      "parent": null,
+      "desc": "Design lead/orchestrator: creative & art direction (briefs, UX, UI structure & tokens, brand, audits) — and dispatches hands-on work to the claude / figma / canva design sub-agents"
+    },
+    {
+      "slug": "8gentic-platform-builder",
+      "area": "technology",
+      "level": 1,
+      "parent": null,
+      "desc": "Turns any business idea, SOP, or workflow into a complete multi-agent TypeScript/Node system with Coda data layer, test infrastructure, and GitHub CI/CD"
+    },
+    {
+      "slug": "8gentic-product-manager",
+      "area": "technology",
+      "level": 1,
+      "parent": null,
+      "desc": "Product management end to end: strategy, vision, personas, journey, user stories, PRD, GTM, and metrics → Coda workspace"
+    },
+    {
+      "slug": "8gentic-web-dev",
+      "area": "technology",
+      "level": 1,
+      "parent": null,
+      "desc": "Web-dev lead/orchestrator: implements the PM + designer outputs as a live site, picking the platform and dispatching to the framer / squarespace sub-agents — and gating publish on the web-qa verifier"
+    },
+    {
+      "slug": "8gentic-canva-designer",
+      "area": "technology",
+      "level": 2,
+      "parent": "8gentic-designer",
+      "desc": "Connects to Canva to analyze existing work and create new/on-brand designs via the Canva Connect API"
+    },
+    {
+      "slug": "8gentic-claude-designer",
+      "area": "technology",
+      "level": 2,
+      "parent": "8gentic-designer",
+      "desc": "Human-in-the-loop UI design loop that drives claude.ai/design to produce tasteable variants and a code handoff"
+    },
+    {
+      "slug": "8gentic-figma-designer",
+      "area": "technology",
+      "level": 2,
+      "parent": "8gentic-designer",
+      "desc": "Connects to Figma to ingest/analyze existing files (REST) and author new design via generated Figma plugin code"
+    },
+    {
+      "slug": "8gentic-framer-dev",
+      "area": "technology",
+      "level": 2,
+      "parent": "8gentic-web-dev",
+      "desc": "Two surfaces — Server-API client builds (layout, React components, CMS, publish) and internal unframer-MCP ops on the firm's live Framer portfolio (grounded in the8genc/design-8gents)"
+    },
+    {
+      "slug": "8gentic-metrics-modeler",
+      "area": "technology",
+      "level": 2,
+      "parent": null,
+      "desc": "Builds an analytics-model (tracking plan + metric layer); dispatches the dashboard-spec task agent"
+    },
+    {
+      "slug": "8gentic-ml-prototyper",
+      "area": "technology",
+      "level": 2,
+      "parent": null,
+      "desc": "Specs an ML capability into an ml-spec (data, approach, baseline, metrics); dispatches the eval-harness task agent"
+    },
+    {
+      "slug": "8gentic-pos-manager",
+      "area": "technology",
+      "level": 2,
+      "parent": null,
+      "desc": "Manages a client's Square POS account via the Square Node SDK — catalog, inventory, orders, payments, customers; each client adds their own API keys in a settings/dashboard step"
+    },
+    {
+      "slug": "8gentic-prd",
+      "area": "technology",
+      "level": 2,
+      "parent": null,
+      "desc": "Generates, validates, scores, refines, and persists production-ready PRDs for AINative features and agent capabilities"
+    },
+    {
+      "slug": "8gentic-squarespace-dev",
+      "area": "technology",
+      "level": 2,
+      "parent": "8gentic-web-dev",
+      "desc": "Develops a Squarespace site: editor build, Custom CSS + code injection, and Commerce APIs for store data"
+    },
+    {
+      "slug": "8gentic-dashboard-spec-writer",
+      "area": "technology",
+      "level": 3,
+      "parent": null,
+      "desc": "Specs one dashboard for an audience — decision, metrics, comparisons, drill-downs (limited tools)"
+    },
+    {
+      "slug": "8gentic-eval-harness-builder",
+      "area": "technology",
+      "level": 3,
+      "parent": null,
+      "desc": "Designs the eval harness for one model — eval set, metrics, slices, ship bar (limited tools)"
+    },
+    {
+      "slug": "8gentic-web-qa",
+      "area": "technology",
+      "level": 3,
+      "parent": "8gentic-web-dev",
+      "desc": "Pre-publish QA gate: drives chrome-devtools-mcp + Puppeteer over the staged site — design fidelity, functional flows, console/network, a11y/perf — returns a pass/fail report (limited tools)"
+    }
+  ]
+}
