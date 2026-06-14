@@ -137,7 +137,7 @@
         </div>
         <pre class="codeblock__body" id="cfg-pat"><span class="tok-punc">{</span>
   <span class="tok-key">"mcpServers"</span><span class="tok-punc">: {</span>
-    <span class="tok-key">"prd-generator"</span><span class="tok-punc">: {</span>
+    <span class="tok-key">"8genc"</span><span class="tok-punc">: {</span>
       <span class="tok-key">"type"</span><span class="tok-punc">:</span> <span class="tok-str">"http"</span><span class="tok-punc">,</span>
       <span class="tok-key">"url"</span><span class="tok-punc">:</span> <span class="tok-str">"https://mcp.8genc.com/mcp"</span><span class="tok-punc">,</span>
       <span class="tok-key">"headers"</span><span class="tok-punc">: {</span>
@@ -170,7 +170,7 @@
             <pre class="codeblock__body" id="cfg-claude"><span class="tok-cmt">// OAuth: omit headers — Claude opens a browser to sign in</span>
 <span class="tok-punc">{</span>
   <span class="tok-key">"mcpServers"</span><span class="tok-punc">: {</span>
-    <span class="tok-key">"prd-generator"</span><span class="tok-punc">: {</span>
+    <span class="tok-key">"8genc"</span><span class="tok-punc">: {</span>
       <span class="tok-key">"type"</span><span class="tok-punc">:</span> <span class="tok-str">"http"</span><span class="tok-punc">,</span>
       <span class="tok-key">"url"</span><span class="tok-punc">:</span> <span class="tok-str">"https://mcp.8genc.com/mcp"</span>
     <span class="tok-punc">}</span>
@@ -187,7 +187,7 @@
             </div>
             <pre class="codeblock__body" id="cfg-cursor"><span class="tok-punc">{</span>
   <span class="tok-key">"mcpServers"</span><span class="tok-punc">: {</span>
-    <span class="tok-key">"prd-generator"</span><span class="tok-punc">: {</span>
+    <span class="tok-key">"8genc"</span><span class="tok-punc">: {</span>
       <span class="tok-key">"type"</span><span class="tok-punc">:</span> <span class="tok-str">"http"</span><span class="tok-punc">,</span>
       <span class="tok-key">"url"</span><span class="tok-punc">:</span> <span class="tok-str">"https://mcp.8genc.com/mcp"</span><span class="tok-punc">,</span>
       <span class="tok-key">"headers"</span><span class="tok-punc">: {</span> <span class="tok-key">"Authorization"</span><span class="tok-punc">:</span> <span class="tok-str">"Bearer 8genc_pat_…"</span> <span class="tok-punc">}</span>
@@ -205,7 +205,7 @@
             </div>
             <pre class="codeblock__body" id="cfg-windsurf"><span class="tok-punc">{</span>
   <span class="tok-key">"mcpServers"</span><span class="tok-punc">: {</span>
-    <span class="tok-key">"prd-generator"</span><span class="tok-punc">: {</span>
+    <span class="tok-key">"8genc"</span><span class="tok-punc">: {</span>
       <span class="tok-key">"serverUrl"</span><span class="tok-punc">:</span> <span class="tok-str">"https://mcp.8genc.com/mcp"</span><span class="tok-punc">,</span>
       <span class="tok-key">"headers"</span><span class="tok-punc">: {</span> <span class="tok-key">"Authorization"</span><span class="tok-punc">:</span> <span class="tok-str">"Bearer 8genc_pat_…"</span> <span class="tok-punc">}</span>
     <span class="tok-punc">}</span>
@@ -219,17 +219,20 @@
     <article class="doc-block" id="verify">
       <span class="doc-block__index mono">04</span>
       <h2 class="doc-h2">Verify the connection</h2>
-      <p>Restart your client and confirm the server registered. You should see <strong>8 tools</strong> and a set of skill prompts.</p>
+      <p>Restart your client and confirm the server registered. You should see <strong>16 tools</strong> and the Agent Skills as selectable prompts — an operating system of <strong>78 skills across 4 levels</strong> (browse the full catalog at <a class="link" href="/tools">/tools</a>).</p>
       <div class="terminal">
-        <div class="terminal__bar"><span class="terminal__dot"></span><span class="terminal__dot"></span><span class="terminal__dot"></span><span class="terminal__title mono">prd-generator · connected</span></div>
-        <pre class="terminal__body"><span class="term-prompt">›</span> <span class="term-cmd">List the tools on prd-generator</span>
+        <div class="terminal__bar"><span class="terminal__dot"></span><span class="terminal__dot"></span><span class="terminal__dot"></span><span class="terminal__title mono">8genc · connected</span></div>
+        <pre class="terminal__body"><span class="term-prompt">›</span> <span class="term-cmd">List the tools on 8genc</span>
 
 <span class="term-ok">✓ connected</span>  mcp.8genc.com/mcp   <span class="muted">(38ms)</span>
 
-  <span class="signal">platform</span>   prd_list_services · prd_get_api_catalog · prd_suggest_stack
-  <span class="signal">skills</span>     skill_list · skill_get · skill_get_reference · skill_search · skill_sync
+  <span class="signal">platform</span>      prd_list_services · prd_get_api_catalog · prd_suggest_stack
+  <span class="signal">skills</span>        skill_list · skill_get · skill_get_reference · skill_search · skill_sync
+  <span class="signal">orchestration</span> orchestration_manifests · orchestration_plan · orchestration_guide
+  <span class="signal">client</span>        client_list · client_memory_store · client_memory_search
+  <span class="signal">credentials</span>   tool_credentials_status · dataforseo_search_volume
 
-<span class="term-ok">✓ 8 tools ready</span>  ·  prompts loaded from the8genc/ai-8gent-skills</pre>
+<span class="term-ok">✓ 16 tools ready</span>  ·  78 skills as prompts from the8genc/ai-8gent-skills</pre>
       </div>
       <div class="callout callout--warn">
         <i data-lucide="alert-triangle"></i>
@@ -252,7 +255,7 @@
         </div>
         <div class="firstcmd">
           <span class="firstcmd__tag mono">Load a playbook</span>
-          <code class="firstcmd__line">skill_get prd-generator</code>
+          <code class="firstcmd__line">skill_get 8gentic-prd</code>
         </div>
       </div>
       <a href="/tools" class="btn btn--ghost" style="margin-top:24px">Browse the full catalog <i data-lucide="arrow-right"></i></a>

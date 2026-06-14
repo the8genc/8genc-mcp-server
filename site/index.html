@@ -90,12 +90,12 @@
       </div>
       <div class="codeblock">
         <div class="codeblock__bar">
-          <span class="codeblock__label">~/.mcp · prd-generator</span>
+          <span class="codeblock__label">~/.mcp · 8genc</span>
           <button class="copy-btn" data-copy="#hero-config"><i data-lucide="copy"></i><span data-copy-label>Copy</span></button>
         </div>
         <pre class="codeblock__body" id="hero-config"><span class="tok-punc">{</span>
   <span class="tok-key">"mcpServers"</span><span class="tok-punc">: {</span>
-    <span class="tok-key">"prd-generator"</span><span class="tok-punc">: {</span>
+    <span class="tok-key">"8genc"</span><span class="tok-punc">: {</span>
       <span class="tok-key">"type"</span><span class="tok-punc">:</span> <span class="tok-str">"http"</span><span class="tok-punc">,</span>
       <span class="tok-key">"url"</span><span class="tok-punc">:</span>  <span class="tok-str">"https://mcp.8genc.com/mcp"</span>
     <span class="tok-punc">}</span>
@@ -239,7 +239,7 @@
       <div class="step" data-reveal data-reveal-delay="3">
         <span class="step__num">03</span>
         <h3 class="step__title">Point your client</h3>
-        <p class="step__body">Drop the endpoint into Claude, Cursor, or Windsurf. The 8 tools and every Agent Skill appear instantly — ready to execute.</p>
+        <p class="step__body">Drop the endpoint into Claude, Cursor, or Windsurf. The 16 tools and 78 Agent Skills appear instantly — ready to execute.</p>
         <a class="link mono step__link" href="/docs">Full manual →</a>
       </div>
     </div>
@@ -251,10 +251,10 @@
   <div class="container">
     <div class="eyebrow-row" data-reveal>
       <span class="kicker">04 · Capability Catalog</span>
-      <span class="eyebrow-row__index">8 tools · 2 groups</span>
+      <span class="eyebrow-row__index">16 tools · 5 groups</span>
     </div>
     <div class="tools-preview__head" data-reveal>
-      <h2 class="h-section">Eight tools. Zero guesswork.</h2>
+      <h2 class="h-section">Sixteen tools. Zero guesswork.</h2>
       <a href="/tools" class="btn btn--ghost">Full catalog <i data-lucide="arrow-right"></i></a>
     </div>
     <div class="toolgrid">
@@ -292,7 +292,7 @@
         <h3 class="workflow__title">"Write a PRD for adding webhook notifications to Agent Cloud."</h3>
         <ol class="flow">
           <li class="flow__step"><span class="flow__tool">prd_suggest_stack</span><span class="flow__desc">Picks real AINative services for the requirement</span></li>
-          <li class="flow__step"><span class="flow__tool">skill_get prd-generator</span><span class="flow__desc">Loads the firm's PRD template + 15-rule rubric</span></li>
+          <li class="flow__step"><span class="flow__tool">skill_get 8gentic-prd</span><span class="flow__desc">Loads the firm's PRD template + 15-rule rubric</span></li>
           <li class="flow__step"><span class="flow__tool">prd_get_api_catalog</span><span class="flow__desc">Verifies every API path is real before it ships</span></li>
           <li class="flow__step"><span class="flow__tool">zerodb_store_memory</span><span class="flow__desc">Persists the PRD for future sessions</span></li>
         </ol>
@@ -307,7 +307,7 @@
         </div>
         <h3 class="workflow__title">"Turn our onboarding SOP into an automated multi-agent system."</h3>
         <ol class="flow">
-          <li class="flow__step"><span class="flow__tool">skill_search</span><span class="flow__desc">Finds <em>agentic-platform-builder</em> as best match</span></li>
+          <li class="flow__step"><span class="flow__tool">skill_search</span><span class="flow__desc">Finds <em>8gentic-platform-builder</em> as best match</span></li>
           <li class="flow__step"><span class="flow__tool">skill_get</span><span class="flow__desc">Loads the full build playbook + references</span></li>
           <li class="flow__step"><span class="flow__tool">prd_list_services</span><span class="flow__desc">Maps each agent to a real platform service</span></li>
           <li class="flow__step"><span class="flow__tool">skill_get_reference</span><span class="flow__desc">Pulls testing + CI/CD patterns on demand</span></li>
@@ -366,7 +366,7 @@
       <div class="acc__item" data-acc-item>
         <button class="acc__head" data-acc-head aria-expanded="false"><span>What happened to the PRD tools?</span><span class="acc__icon"></span></button>
         <div class="acc__body" data-acc-body hidden>
-          <p>PRD authoring moved out of the server and into the <code class="mono">prd-generator</code> Agent Skill. The skill carries the full workflow, templates, and validation rubric — and orchestrates the server's platform tools and your ZeroDB memory tools rather than re-implementing them. Load it with <code class="mono">skill_get prd-generator</code>.</p>
+          <p>PRD authoring moved out of the server and into the <code class="mono">8gentic-prd</code> Agent Skill. The skill carries the full workflow, templates, and validation rubric — and orchestrates the server's platform tools and your ZeroDB memory tools rather than re-implementing them. Load it with <code class="mono">skill_get 8gentic-prd</code>.</p>
         </div>
       </div>
       <div class="acc__item" data-acc-item>
