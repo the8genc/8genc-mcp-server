@@ -2,10 +2,10 @@
  * Role-based access — the PURE decision core (no I/O, fully unit-testable).
  *
  * Three access classes plus a legacy/unclassified role:
- *   admin       — every skill + tool
- *   consultant  — skills tiered consultant or client (the working default)
- *   client      — only skills explicitly allow-listed (or tiered 'client')
- *   user        — legacy/unclassified: platform discovery only, no tiered skills
+ *   admin       every skill + tool
+ *   consultant  skills tiered consultant or client (the working default)
+ *   client      no skills, prompts, or staff tools; only the client tool allow list
+ *   user        legacy/unclassified: no tools until an admin assigns a role
  *
  * A skill's `tier` is the default gate; a per-user `override` ('allow'|'deny')
  * wins over it. NULL tier = unclassified = admin-only until classified.
@@ -22,8 +22,27 @@ export const TIER_RANK = { admin: 3, consultant: 2, client: 1 };
 export const ROLES = ['admin', 'consultant', 'client', 'user'];
 export const TIERS = ['admin', 'consultant', 'client'];
 
-/** Tools available to any authenticated user; everything else here is admin-only. */
-const ADMIN_ONLY_TOOLS = new Set(['skill_sync']);
+/**
+ * Per-role tool ALLOW lists (admin/owner bypass). A tool absent from a role's
+ * list is hidden from tools/list and refused by name; an unknown role gets
+ * nothing. New tools are therefore closed to non-admins until listed here.
+ */
+const CONSULTANT_TOOLS = [
+  'prd_list_services', 'prd_get_api_catalog', 'prd_suggest_stack',
+  'skill_list', 'skill_get', 'skill_get_reference', 'skill_search',
+  'orchestration_manifests', 'orchestration_plan', 'orchestration_guide',
+  'client_list', 'client_memory_store', 'client_memory_search',
+  'tool_credentials_status', 'dataforseo_search_volume'
+];
+// Client contacts talk only to the 8genC PM. The pm_* tools land in a later
+// release; until then a client token sees no tools at all.
+const CLIENT_TOOLS = [];
+
+export const ROLE_TOOL_ALLOW = Object.freeze({
+  consultant: new Set(CONSULTANT_TOOLS),
+  client: new Set(CLIENT_TOOLS),
+  user: new Set()
+});
 
 /** Full-access sentinel for the local operator (stdio / no-auth). */
 export const OWNER = Object.freeze({ userId: null, role: 'admin', owner: true });
@@ -47,7 +66,17 @@ export function isAdmin(user) {
 /** Can this user invoke this tool by name? */
 export function canUseTool(user, toolName) {
   if (isAdmin(user)) return true;
-  return !ADMIN_ONLY_TOOLS.has(toolName);
+  const allow = Object.hasOwn(ROLE_TOOL_ALLOW, user?.role) ? ROLE_TOOL_ALLOW[user.role] : null;
+  return !!allow && allow.has(toolName);
+}
+
+/**
+ * Can this user see skills at all (as MCP prompts, the injected client
+ * context, or the portal's skill list)? Only staff: client contacts and
+ * legacy users never run 8genC skills.
+ */
+export function canUseSkills(user) {
+  return isAdmin(user) || user?.role === 'consultant';
 }
 
 /**

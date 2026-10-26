@@ -48,10 +48,23 @@ async function applySqlFiles(client) {
   }
 }
 
+/**
+ * Refuse to seed a production admin with a missing or default password. Pure;
+ * throws so the deploy fails loudly instead of shipping admin/admin.
+ */
+export function assertSeedPassword({ nodeEnv, seedPassword } = {}) {
+  if (nodeEnv !== 'production') return;
+  if (!seedPassword || seedPassword === 'admin') {
+    throw new Error('ADMIN_SEED_PASSWORD is required in production to seed the initial admin. Set it and restart.');
+  }
+}
+
 async function seedAdmin(client) {
   const username = config.adminUsername;
   const { rows } = await client.query('SELECT id FROM users WHERE username = $1', [username]);
   if (rows.length > 0) return; // already seeded — never reset an existing admin
+
+  assertSeedPassword({ nodeEnv: process.env.NODE_ENV, seedPassword: process.env.ADMIN_SEED_PASSWORD });
 
   const hash = await bcrypt.hash(config.adminPassword, config.bcryptRounds);
   await client.query(

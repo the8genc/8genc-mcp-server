@@ -210,20 +210,21 @@ export class ZeroDBClient {
     });
   }
 
-  async searchClientMemory(clientId, query, limit = 10) {
+  async searchClientMemory(clientId, query, limit = 10, { strict = true } = {}) {
     const res = await this.request('POST', '/api/v1/public/memory/v2/recall', {
       query: query || '',
       limit,
       namespace: this.clientNamespace(clientId)
     });
     // Defense-in-depth: never return another tenant's rows even if the API
-    // treats namespace as a soft hint. Only drop rows that explicitly belong to
-    // a different client; rows without client_id metadata are kept.
+    // treats namespace as a soft hint. Rows tagged for a different client are
+    // always dropped. Untagged rows are dropped too unless `strict` is false,
+    // which only admin callers pass.
     const results = res?.results || res?.memories || res;
     if (Array.isArray(results)) {
       const filtered = results.filter((r) => {
         const cid = r?.metadata?.client_id;
-        return !cid || cid === clientId;
+        return cid ? cid === clientId : !strict;
       });
       if (Array.isArray(res?.results)) return { ...res, results: filtered };
       if (Array.isArray(res?.memories)) return { ...res, memories: filtered };

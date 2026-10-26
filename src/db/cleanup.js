@@ -19,6 +19,8 @@ export async function cleanupExpired() {
   await run('authorization_codes', `DELETE FROM authorization_codes WHERE expires_at < now() - interval '1 day'`);
   await run('email_tokens', `DELETE FROM email_tokens WHERE expires_at < now() - interval '7 days'`);
   await run('refresh_tokens', `DELETE FROM refresh_tokens WHERE (expires_at < now() - interval '30 days') OR (revoked_at IS NOT NULL AND revoked_at < now() - interval '30 days')`);
+  // Audit rows are kept at least one year.
+  await run('audit_events', `DELETE FROM audit_events WHERE created_at < now() - interval '400 days'`);
   return results;
 }
 

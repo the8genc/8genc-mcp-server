@@ -30,7 +30,8 @@ PRD generation is delivered as the `prd-generator` Agent Skill (see below), not 
 
 Skills declare a `manifest:` block in SKILL.md frontmatter; `consumes`/`produces`
 across skills form the dependency DAG, which the planner topo-sorts into parallel
-levels. Orchestration tools are **RBAC-scoped** — the plan only spans skills the
+levels. Tool access is a per-role allow list (`ROLE_TOOL_ALLOW` in `src/auth/access.js`):
+client-role tokens see no tools, skills, or prompts. Orchestration tools are **RBAC-scoped** — the plan only spans skills the
 caller's role/overrides allow.
 
 ### Client memory (multi-tenant)

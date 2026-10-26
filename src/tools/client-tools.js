@@ -54,10 +54,11 @@ export const CLIENT_TOOLS = [
  * @param {object} deps resolved by the server:
  *   - clients: the accessible client rows ([{id,slug,name},...])
  *   - resolveClientId(explicitRef): async → { ok, clientId } | { ok:false, reason, options? }
+ *   - strictTenant: drop memory rows with no client_id tag (default true; admins pass false)
  */
 export async function executeClientTool(name, args = {}, ctx, deps = {}) {
   const zerodb = ctx?.client;
-  const { clients = [], resolveClientId } = deps;
+  const { clients = [], resolveClientId, strictTenant = true } = deps;
 
   if (name === 'client_list') {
     return {
@@ -98,7 +99,9 @@ export async function executeClientTool(name, args = {}, ctx, deps = {}) {
       return { stored: true, client_id: clientId, id: res?.id || res?.memory_id || null };
     }
     case 'client_memory_search': {
-      const res = await zerodb.searchClientMemory(clientId, String(args.query || ''), args.limit || 10);
+      const res = await zerodb.searchClientMemory(clientId, String(args.query || ''), args.limit || 10, {
+        strict: strictTenant
+      });
       const results = res?.results || res?.memories || (Array.isArray(res) ? res : []);
       return {
         client_id: clientId,

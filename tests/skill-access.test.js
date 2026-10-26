@@ -34,13 +34,13 @@ describe('isAdmin / canUseTool', () => {
     assert.equal(isAdmin({ role: 'admin' }), true);
     assert.equal(isAdmin({ role: 'consultant' }), false);
   });
-  it('skill_sync is admin-only; other tools open to any authenticated user', () => {
+  it('skill_sync is admin-only; consultants get the other staff tools', () => {
     assert.equal(canUseTool({ role: 'consultant' }, 'skill_sync'), false);
     assert.equal(canUseTool({ role: 'client' }, 'skill_sync'), false);
     assert.equal(canUseTool(OWNER, 'skill_sync'), true);
     assert.equal(canUseTool({ role: 'admin' }, 'skill_sync'), true);
     for (const t of ['prd_list_services', 'skill_list', 'skill_get', 'skill_search', 'skill_get_reference']) {
-      assert.equal(canUseTool({ role: 'client' }, t), true, `${t} should be open`);
+      assert.equal(canUseTool({ role: 'consultant' }, t), true, `${t} should be open to consultants`);
     }
   });
 });
