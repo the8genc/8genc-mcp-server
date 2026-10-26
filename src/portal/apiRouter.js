@@ -22,7 +22,7 @@ import { makeDbCredentialResolver } from '../credentials/resolver.js';
 import { testConnection } from '../credentials/test-connection.js';
 import { parse as parseEnv } from 'dotenv';
 import { syncCatalog } from '../skills/catalogSync.js';
-import { decideSlug } from '../auth/access.js';
+import { decideSlug, canUseSkills } from '../auth/access.js';
 import { config } from '../config.js';
 import { hashPassword, verifyPassword, validatePasswordStrength } from '../auth/passwords.js';
 import { generatePat, randomToken, sha256 } from '../auth/tokens.js';
@@ -432,18 +432,22 @@ export function createPortalApiRouter({ oauth = null, skills = null } = {}) {
     const u = req.sessionUser;
     const me = { userId: u.id, role: u.role, owner: false };
     const isAdminUser = u.role === 'admin';
+    const staff = canUseSkills(me);
     const [accessSet, catalog, myClients] = await Promise.all([
-      skillAccess.loadAccessSet(u.id),
-      skillsCatalog.listCatalog(),
+      staff ? skillAccess.loadAccessSet(u.id) : null,
+      staff ? skillsCatalog.listCatalog() : [],
       isAdminUser ? clients.listAll() : clients.listForUser(u.id)
     ]);
     const accessible = catalog
       .filter((s) => decideSlug(me, s.slug, accessSet, config.rbacDefaultTier))
       .map((s) => ({ slug: s.slug, name: s.name, description: s.description, tier: s.tier }));
+    // The client scope (Coda links, variables, notes) is internal: only staff see it.
     return ok(res, {
       role: u.role,
       skills: accessible,
-      clients: myClients.map((c) => ({ id: c.id, slug: c.slug, name: c.name, coda_files: c.coda_files, variables: c.variables, notes: c.notes }))
+      clients: myClients.map((c) => (staff
+        ? { id: c.id, slug: c.slug, name: c.name, coda_files: c.coda_files, variables: c.variables, notes: c.notes }
+        : { id: c.id, slug: c.slug, name: c.name }))
     });
   });
 

@@ -238,8 +238,23 @@ local/stdio use.)
 - **Admins** — approve/reject pending accounts, block/unblock, reset passwords, and elevate
   email-verified users to admin.
 
-New accounts are **pending until an admin approves**. The first admin is seeded as `admin`/`admin`
-and must change its password on first login.
+New accounts are **pending until an admin approves**. The first admin is seeded from
+`ADMIN_SEED_USERNAME`/`ADMIN_SEED_PASSWORD` and must change its password on first login. In
+production (`NODE_ENV=production`) the seed refuses to run without a non-default
+`ADMIN_SEED_PASSWORD`; locally it falls back to `admin`/`admin`.
+
+**Role access.** Tools are granted per role by an allow list in `src/auth/access.js`
+(`ROLE_TOOL_ALLOW`); a tool missing from a role's list is hidden and refused by name.
+
+| Role | Tools | Skills / prompts |
+|---|---|---|
+| `admin` | all | all |
+| `consultant` | all except `skill_sync` | by skill tier and overrides |
+| `client` | none yet (the `pm_*` tools will be the only ones) | none |
+| `user` | none | none |
+
+Every tool call by an authenticated user, allowed or denied, is written to `audit_events`
+(argument keys only, never values). Rows are pruned after 400 days.
 
 **Config** (see `.env.example`): `DATABASE_URL` (Postgres), `JWT_SECRET`, `PUBLIC_BASE_URL`,
 `ADMIN_SEED_PASSWORD`, optional `GOOGLE_*`/`GITHUB_*` for social login, and `EMAIL_*` for

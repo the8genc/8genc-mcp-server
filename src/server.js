@@ -28,6 +28,7 @@ import {
   resolveUser,
   isAdmin,
   canUseTool,
+  canUseSkills,
   decideSlug,
   filterSkillResult,
   buildClientContextBlock,
@@ -37,6 +38,7 @@ import {
 import { config } from './config.js';
 import * as skillAccess from './db/repositories/skillAccess.js';
 import * as clients from './db/repositories/clients.js';
+import * as auditRepo from './db/repositories/audit.js';
 import { syncCatalog } from './skills/catalogSync.js';
 
 // PRD generation/validation/templates/memory are no longer server tools — that
@@ -111,6 +113,12 @@ export function createMcpServer(ctx) {
     return accessCache.get(key);
   }
 
+  /** Fire-and-forget audit row for an authenticated caller (the local owner is not audited). */
+  function auditCall(user, tool, outcome, args, error) {
+    if (!user?.userId) return;
+    void auditRepo.record({ user, tool, outcome, args, error });
+  }
+
   const decide = (user, slug, accessSet) =>
     decideSlug(user, slug, accessSet, config.rbacDefaultTier);
 
@@ -154,6 +162,7 @@ export function createMcpServer(ctx) {
   /** Inject the caller's client context (scope + recent memory) when unambiguous. */
   async function clientContextBlock(user) {
     if (!user?.userId) return null; // owner / stdio has no single scoped client
+    if (!canUseSkills(user)) return null; // never inject client scope into a non-staff prompt
     let accessible;
     try {
       accessible = await getAccessibleClients(user);
@@ -167,7 +176,7 @@ export function createMcpServer(ctx) {
     let memText = '';
     if (client?.isAuthenticated) {
       try {
-        const mem = await withTimeout(client.searchClientMemory(c.id, '', 5), 2500);
+        const mem = await withTimeout(client.searchClientMemory(c.id, '', 5, { strict: !isAdmin(user) }), 2500);
         const results = (mem?.results || mem?.memories || []).slice(0, 5);
         if (results.length) {
           memText =
@@ -201,11 +210,21 @@ export function createMcpServer(ctx) {
   server.setRequestHandler(CallToolRequestSchema, async (request, extra) => {
     const { name, arguments: args } = request.params;
     const user = resolveUser(extra?.authInfo);
-    try {
-      if (!canUseTool(user, name)) {
-        return errorResult(`Access denied: ${name} requires admin.`, name);
-      }
+    if (!canUseTool(user, name)) {
+      // Same reply for a disallowed tool and a nonexistent one, so a restricted
+      // token can't probe which tools exist.
+      auditCall(user, name, 'denied', args);
+      return errorResult(`Tool not available: ${name}`, name);
+    }
+    const response = await callTool(name, args, user);
+    const error = responseError(response);
+    auditCall(user, name, error ? 'error' : 'ok', args, error);
+    return response;
+  });
 
+  /** Run an allowed tool. Access was already checked by the caller. */
+  async function callTool(name, args, user) {
+    try {
       let result;
       if (SKILL_TOOL_NAMES.has(name)) {
         // Single-skill reads: deny up front if the skill isn't accessible.
@@ -242,7 +261,8 @@ export function createMcpServer(ctx) {
         const accessible = await getAccessibleClients(user);
         result = await executeClientTool(name, args || {}, ctx, {
           clients: accessible,
-          resolveClientId: makeResolveClientId(user, accessible)
+          resolveClientId: makeResolveClientId(user, accessible),
+          strictTenant: !isAdmin(user)
         });
       } else if (CREDENTIALS_TOOL_NAMES.has(name)) {
         // Tool-credential status is membership-gated like client memory: resolve the
@@ -276,11 +296,12 @@ export function createMcpServer(ctx) {
       console.error(`[${serverName}] Tool ${name} error:`, err.message);
       return errorResult(err.message, name);
     }
-  });
+  }
 
   // ── Prompts (skills surfaced as selectable prompts) ────────────
   server.setRequestHandler(ListPromptsRequestSchema, async (_request, extra) => {
     const user = resolveUser(extra?.authInfo);
+    if (!canUseSkills(user)) return { prompts: [] };
     let list = [];
     try {
       list = await skills.listSkills();
@@ -310,6 +331,10 @@ export function createMcpServer(ctx) {
     const { name, arguments: promptArgs } = request.params;
     const user = resolveUser(extra?.authInfo);
 
+    if (!canUseSkills(user)) {
+      auditCall(user, `prompt:${name}`, 'denied');
+      throw new Error(`Prompt not available: ${name}`);
+    }
     if (!isAdmin(user)) {
       const accessSet = await getAccessSet(user);
       if (!decide(user, name, accessSet)) {
@@ -354,6 +379,18 @@ function withTimeout(p, ms) {
     p,
     new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), ms))
   ]);
+}
+
+/** The error message carried by a tool response, or null when it succeeded. */
+export function responseError(response) {
+  if (!response) return 'no response';
+  try {
+    const body = JSON.parse(response.content?.[0]?.text ?? 'null');
+    if (body && typeof body === 'object' && !Array.isArray(body) && body.error) return String(body.error);
+  } catch {
+    // non-JSON text: fall through to isError
+  }
+  return response.isError ? 'error' : null;
 }
 
 function errorResult(message, tool) {
